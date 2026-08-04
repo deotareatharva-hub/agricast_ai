@@ -1,0 +1,153 @@
+{
+  "info": {
+    "name": "AgriCast AI - Reports Module",
+    "description": "Example requests for the Reports backend (generate/list/get/download/delete). Set {{baseUrl}}, {{token}}, {{farmId}} and {{reportId}} in a Postman environment before running.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:5000/api/v1" },
+    { "key": "token", "value": "PASTE_JWT_HERE" },
+    { "key": "farmId", "value": "PASTE_FARM_UUID_HERE" },
+    { "key": "reportId", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Generate - Today's Report (JSON)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": "{{baseUrl}}/reports/generate",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"farmId\": \"{{farmId}}\",\n  \"reportType\": \"today\",\n  \"fileType\": \"json\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Generate - Weekly Report (PDF)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": "{{baseUrl}}/reports/generate",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"farmId\": \"{{farmId}}\",\n  \"reportType\": \"weekly\",\n  \"fileType\": \"pdf\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Generate - Monthly Report (CSV)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": "{{baseUrl}}/reports/generate",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"farmId\": \"{{farmId}}\",\n  \"reportType\": \"monthly\",\n  \"fileType\": \"csv\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Generate - Recommendation Report (force regenerate)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": "{{baseUrl}}/reports/generate",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"farmId\": \"{{farmId}}\",\n  \"reportType\": \"recommendation\",\n  \"fileType\": \"pdf\",\n  \"forceRegenerate\": true\n}"
+        }
+      }
+    },
+    {
+      "name": "List Reports (all)",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+        "url": "{{baseUrl}}/reports"
+      }
+    },
+    {
+      "name": "List Reports (filtered by farm + type)",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+        "url": "{{baseUrl}}/reports?farmId={{farmId}}&reportType=weekly&limit=10&offset=0"
+      }
+    },
+    {
+      "name": "Get Report by ID",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+        "url": "{{baseUrl}}/reports/{{reportId}}"
+      }
+    },
+    {
+      "name": "Download Report File",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+        "url": "{{baseUrl}}/reports/{{reportId}}/download"
+      }
+    },
+    {
+      "name": "Delete Report",
+      "request": {
+        "method": "DELETE",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+        "url": "{{baseUrl}}/reports/{{reportId}}"
+      }
+    },
+    {
+      "name": "Error - Invalid reportType (400)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": "{{baseUrl}}/reports/generate",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"farmId\": \"{{farmId}}\",\n  \"reportType\": \"yearly\",\n  \"fileType\": \"pdf\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Error - Missing/unowned farm (404)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": "{{baseUrl}}/reports/generate",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"farmId\": \"00000000-0000-0000-0000-000000000000\",\n  \"reportType\": \"today\",\n  \"fileType\": \"pdf\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Error - No auth token (401)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/reports"
+      }
+    }
+  ]
+}

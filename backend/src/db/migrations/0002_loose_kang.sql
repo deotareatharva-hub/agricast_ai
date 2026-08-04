@@ -1,0 +1,2 @@
+DROP INDEX "farms_user_id_farm_name_unique";--> statement-breakpoint
+CREATE UNIQUE INDEX "farms_user_id_farm_name_unique" ON "farms" USING btree ("user_id","farm_name") WHERE "farms"."deleted_at" IS NULL;

@@ -1,0 +1,185 @@
+{
+  "info": {
+    "name": "AgriCast AI - Analytics Module",
+    "description": "Example requests for the Analytics backend (dashboard/weather/recommendations/monthly/weekly/summary). Set {{baseUrl}}, {{token}}, and {{farmId}} in a Postman environment before running.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000/api/v1"
+    },
+    {
+      "key": "token",
+      "value": "PASTE_JWT_HERE"
+    },
+    {
+      "key": "farmId",
+      "value": "PASTE_FARM_UUID_HERE"
+    }
+  ],
+  "item": [
+    {
+      "name": "Dashboard",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": "{{baseUrl}}/analytics/dashboard/{{farmId}}"
+      }
+    },
+    {
+      "name": "Weather Analytics - default (last 30 days, daily)",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": "{{baseUrl}}/analytics/weather/{{farmId}}"
+      }
+    },
+    {
+      "name": "Weather Analytics - custom range, weekly granularity",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/analytics/weather/{{farmId}}?startDate=2026-07-01&endDate=2026-08-01&granularity=week",
+          "host": ["{{baseUrl}}"],
+          "path": ["analytics", "weather", "{{farmId}}"],
+          "query": [
+            { "key": "startDate", "value": "2026-07-01" },
+            { "key": "endDate", "value": "2026-08-01" },
+            { "key": "granularity", "value": "week" }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Recommendation Analytics",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/analytics/recommendations/{{farmId}}?limit=10",
+          "host": ["{{baseUrl}}"],
+          "path": ["analytics", "recommendations", "{{farmId}}"],
+          "query": [{ "key": "limit", "value": "10" }]
+        }
+      }
+    },
+    {
+      "name": "Monthly Summary - current month",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": "{{baseUrl}}/analytics/monthly/{{farmId}}"
+      }
+    },
+    {
+      "name": "Monthly Summary - specific month",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/analytics/monthly/{{farmId}}?month=2026-07",
+          "host": ["{{baseUrl}}"],
+          "path": ["analytics", "monthly", "{{farmId}}"],
+          "query": [{ "key": "month", "value": "2026-07" }]
+        }
+      }
+    },
+    {
+      "name": "Weekly Summary - current week",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": "{{baseUrl}}/analytics/weekly/{{farmId}}"
+      }
+    },
+    {
+      "name": "Weekly Summary - specific ISO week",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/analytics/weekly/{{farmId}}?week=2026-W30",
+          "host": ["{{baseUrl}}"],
+          "path": ["analytics", "weekly", "{{farmId}}"],
+          "query": [{ "key": "week", "value": "2026-W30" }]
+        }
+      }
+    },
+    {
+      "name": "Daily Summary - today",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": "{{baseUrl}}/analytics/summary/{{farmId}}"
+      }
+    },
+    {
+      "name": "Daily Summary - specific date",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/analytics/summary/{{farmId}}?date=2026-07-15",
+          "host": ["{{baseUrl}}"],
+          "path": ["analytics", "summary", "{{farmId}}"],
+          "query": [{ "key": "date", "value": "2026-07-15" }]
+        }
+      }
+    },
+    {
+      "name": "Error case - missing auth token",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/analytics/dashboard/{{farmId}}"
+      }
+    },
+    {
+      "name": "Error case - invalid farmId",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": "{{baseUrl}}/analytics/dashboard/not-a-uuid"
+      }
+    },
+    {
+      "name": "Error case - invalid granularity",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/analytics/weather/{{farmId}}?granularity=fortnight",
+          "host": ["{{baseUrl}}"],
+          "path": ["analytics", "weather", "{{farmId}}"],
+          "query": [{ "key": "granularity", "value": "fortnight" }]
+        }
+      }
+    }
+  ]
+}

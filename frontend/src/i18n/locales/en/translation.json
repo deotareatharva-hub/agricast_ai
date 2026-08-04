@@ -1,0 +1,126 @@
+{
+  "app": {
+    "name": "AgriCast AI",
+    "tagline": "AI-Powered Precision Agriculture Decision Support"
+  },
+  "nav": {
+    "home": "Home",
+    "dashboard": "Dashboard",
+    "farms": "Farms",
+    "login": "Login",
+    "register": "Register",
+    "logout": "Logout"
+  },
+  "auth": {
+    "loginTitle": "Welcome back",
+    "loginSubtitle": "Sign in to access your farm dashboard",
+    "registerTitle": "Create your account",
+    "registerSubtitle": "Start making data-driven decisions for your farm",
+    "fullName": "Full name",
+    "email": "Email address",
+    "password": "Password",
+    "confirmPassword": "Confirm password",
+    "loginButton": "Sign in",
+    "registerButton": "Create account",
+    "noAccount": "Don't have an account?",
+    "haveAccount": "Already have an account?",
+    "createOne": "Create one",
+    "signIn": "Sign in",
+    "loggingIn": "Signing in...",
+    "registering": "Creating account...",
+    "loginSuccess": "Logged in successfully",
+    "registerSuccess": "Account created successfully",
+    "logoutSuccess": "Logged out successfully"
+  },
+  "validation": {
+    "required": "This field is required",
+    "invalidEmail": "Enter a valid email address",
+    "minLength": "Must be at least {{count}} characters",
+    "maxLength": "Must be at most {{count}} characters",
+    "positiveNumber": "Must be a positive number",
+    "latitudeRange": "Latitude must be between -90 and 90",
+    "longitudeRange": "Longitude must be between -180 and 180",
+    "passwordMismatch": "Passwords do not match"
+  },
+  "dashboard": {
+    "welcome": "Welcome, {{name}}",
+    "subtitle": "This is your AgriCast AI dashboard foundation. Feature modules (Weather, AI Advisory, Sentinel, Farms, Analytics) arrive in later phases.",
+    "accountInfo": "Account information",
+    "connectionStatus": "Backend connection"
+  },
+  "landing": {
+    "heroTitle": "Precision agriculture decisions, powered by AI",
+    "heroSubtitle": "AgriCast AI brings weather intelligence, satellite insight, and agronomic AI together in one platform.",
+    "getStarted": "Get started",
+    "learnMore": "Sign in"
+  },
+  "footer": {
+    "rights": "All rights reserved."
+  },
+  "notFound": {
+    "title": "Page not found",
+    "subtitle": "The page you are looking for doesn't exist.",
+    "backHome": "Back to home"
+  },
+  "common": {
+    "loading": "Loading...",
+    "language": "Language",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "deleting": "Deleting..."
+  },
+  "farms": {
+    "title": "My Farms",
+    "subtitle": "Manage the farms you own. Weather, satellite, and AI advisory modules will use this data.",
+    "addTitle": "Add a farm",
+    "addSubtitle": "Enter the details of your farm to start tracking it.",
+    "editTitle": "Edit farm",
+    "editSubtitle": "Update your farm's details.",
+    "backToList": "Back to My Farms",
+    "searchPlaceholder": "Search by farm name...",
+    "filterCropPlaceholder": "Filter by crop...",
+    "saving": "Saving...",
+    "mapHint": "Click anywhere on the map, or drag the marker, to set the farm's location.",
+    "createSuccess": "Farm created successfully",
+    "updateSuccess": "Farm updated successfully",
+    "deleteSuccess": "Farm deleted successfully",
+    "deleteError": "Could not delete the farm. Please try again.",
+    "saveError": "Could not save the farm. Please try again.",
+    "loadError": "Could not load farm data. Please try again.",
+    "deleteConfirmTitle": "Delete this farm?",
+    "deleteConfirmMessage": "This will remove \"{{name}}\" from your farms. This action cannot be undone.",
+    "fields": {
+      "farmName": "Farm name",
+      "crop": "Crop",
+      "area": "Area",
+      "latitude": "Latitude",
+      "longitude": "Longitude",
+      "location": "Location",
+      "village": "Village",
+      "district": "District",
+      "state": "State",
+      "country": "Country"
+    },
+    "areaUnits": {
+      "acres": "acres",
+      "hectares": "hectares"
+    },
+    "actions": {
+      "addFarm": "Add farm",
+      "view": "View",
+      "edit": "Edit",
+      "delete": "Delete",
+      "save": "Save farm",
+      "saveChanges": "Save changes"
+    },
+    "empty": {
+      "title": "No farms yet",
+      "subtitle": "Add your first farm to start tracking weather, satellite, and AI advisory insights for it.",
+      "noResultsTitle": "No farms match your search",
+      "noResultsSubtitle": "Try a different farm name or crop filter."
+    },
+    "details": {
+      "overview": "Overview"
+    }
+  }
+}
