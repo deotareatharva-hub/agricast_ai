@@ -4,6 +4,10 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 import { useAuth } from "../context/AuthContext";
+import Field from "../components/ui/Field";
+import Input from "../components/ui/Input";
+import Button from "../components/ui/Button";
+import ErrorState from "../components/ui/ErrorState";
 
 export default function LoginPage() {
   const { t } = useTranslation();
@@ -38,21 +42,14 @@ export default function LoginPage() {
       <p className="mt-1 text-sm text-neutral-500">{t("auth.loginSubtitle")}</p>
 
       <form className="mt-6 space-y-4" onSubmit={handleSubmit(onSubmit)} noValidate>
-        {serverError && (
-          <div className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700" role="alert">
-            {serverError}
-          </div>
-        )}
+        {serverError && <ErrorState message={serverError} />}
 
-        <div>
-          <label htmlFor="email" className="block text-sm font-medium text-neutral-700">
-            {t("auth.email")}
-          </label>
-          <input
+        <Field label={t("auth.email")} htmlFor="email" error={errors.email}>
+          <Input
             id="email"
             type="email"
             autoComplete="email"
-            className="focus-ring mt-1 block w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+            invalid={Boolean(errors.email)}
             {...register("email", {
               required: t("validation.required"),
               pattern: {
@@ -61,34 +58,21 @@ export default function LoginPage() {
               },
             })}
           />
-          {errors.email && (
-            <p className="mt-1 text-xs text-red-600">{errors.email.message}</p>
-          )}
-        </div>
+        </Field>
 
-        <div>
-          <label htmlFor="password" className="block text-sm font-medium text-neutral-700">
-            {t("auth.password")}
-          </label>
-          <input
+        <Field label={t("auth.password")} htmlFor="password" error={errors.password}>
+          <Input
             id="password"
             type="password"
             autoComplete="current-password"
-            className="focus-ring mt-1 block w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+            invalid={Boolean(errors.password)}
             {...register("password", { required: t("validation.required") })}
           />
-          {errors.password && (
-            <p className="mt-1 text-xs text-red-600">{errors.password.message}</p>
-          )}
-        </div>
+        </Field>
 
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="focus-ring w-full rounded-md bg-brand-600 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-700 disabled:opacity-60"
-        >
+        <Button type="submit" fullWidth isLoading={isSubmitting}>
           {isSubmitting ? t("auth.loggingIn") : t("auth.loginButton")}
-        </button>
+        </Button>
       </form>
 
       <p className="mt-6 text-center text-sm text-neutral-500">

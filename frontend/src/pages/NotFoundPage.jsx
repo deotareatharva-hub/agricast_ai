@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { buttonClasses } from "../components/ui/Button";
 
 export default function NotFoundPage() {
   const { t } = useTranslation();
@@ -11,10 +12,7 @@ export default function NotFoundPage() {
         {t("notFound.title")}
       </h1>
       <p className="mt-2 text-neutral-500">{t("notFound.subtitle")}</p>
-      <Link
-        to="/"
-        className="focus-ring mt-6 rounded-md bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700"
-      >
+      <Link to="/" className={`mt-6 ${buttonClasses()}`}>
         {t("notFound.backHome")}
       </Link>
     </div>

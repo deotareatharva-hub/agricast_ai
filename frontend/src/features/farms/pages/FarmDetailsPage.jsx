@@ -1,12 +1,18 @@
-import { useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
+import { CloudSun } from "lucide-react";
 import { useFarm } from "../hooks/useFarm";
 import { useDeleteFarm } from "../hooks/useDeleteFarm";
 import LocationPicker from "../components/LocationPicker";
-import ConfirmDialog from "../components/ConfirmDialog";
 import Loading from "../../../components/common/Loading";
+import PageHeader from "../../../components/ui/PageHeader";
+import Breadcrumb from "../../../components/ui/Breadcrumb";
+import Card from "../../../components/ui/Card";
+import Button from "../../../components/ui/Button";
+import ErrorState from "../../../components/ui/ErrorState";
+import Dialog from "../../../components/ui/Dialog";
+import { useDisclosure } from "../../../hooks/useDisclosure";
 
 function DetailRow({ label, value }) {
   return (
@@ -21,9 +27,9 @@ export default function FarmDetailsPage() {
   const { id } = useParams();
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { data: farm, isLoading, isError, error } = useFarm(id);
+  const { data: farm, isLoading, isError, error, refetch } = useFarm(id);
   const deleteFarm = useDeleteFarm();
-  const [confirmOpen, setConfirmOpen] = useState(false);
+  const confirmDialog = useDisclosure();
 
   const handleDelete = async () => {
     try {
@@ -40,47 +46,35 @@ export default function FarmDetailsPage() {
   }
 
   if (isError) {
-    return (
-      <p className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">
-        {error?.message || t("farms.loadError")}
-      </p>
-    );
+    return <ErrorState message={error?.message || t("farms.loadError")} onRetry={refetch} />;
   }
 
   if (!farm) return null;
 
   return (
     <div className="mx-auto max-w-3xl">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <Link
-            to="/dashboard/farms"
-            className="focus-ring text-sm font-medium text-brand-700 hover:underline"
-          >
-            {t("farms.backToList")}
-          </Link>
-          <h1 className="mt-1 text-2xl font-semibold text-neutral-900">{farm.farmName}</h1>
-          <p className="text-sm text-neutral-500">{farm.crop}</p>
-        </div>
-        <div className="flex gap-3">
-          <Link
-            to={`/dashboard/farms/${farm.id}/edit`}
-            className="focus-ring rounded-md border border-neutral-300 px-4 py-2 text-sm font-medium text-neutral-700 hover:bg-neutral-50"
-          >
-            {t("farms.actions.edit")}
-          </Link>
-          <button
-            type="button"
-            onClick={() => setConfirmOpen(true)}
-            className="focus-ring rounded-md border border-red-200 px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50"
-          >
-            {t("farms.actions.delete")}
-          </button>
-        </div>
-      </div>
+      <PageHeader
+        breadcrumb={<Breadcrumb items={[{ label: t("farms.title"), to: "/dashboard/farms" }, { label: farm.farmName }]} />}
+        title={farm.farmName}
+        subtitle={farm.crop}
+        actions={
+          <>
+            <Button variant="secondary" onClick={() => navigate(`/dashboard/farms/${farm.id}/weather`)}>
+              <CloudSun className="h-4 w-4" aria-hidden="true" />
+              {t("farms.actions.weather")}
+            </Button>
+            <Button variant="outline" onClick={() => navigate(`/dashboard/farms/${farm.id}/edit`)}>
+              {t("farms.actions.edit")}
+            </Button>
+            <Button variant="dangerOutline" onClick={confirmDialog.open}>
+              {t("farms.actions.delete")}
+            </Button>
+          </>
+        }
+      />
 
       <div className="mt-6 grid gap-6 sm:grid-cols-2">
-        <div className="rounded-xl border border-neutral-200 bg-white p-5">
+        <Card>
           <h2 className="text-sm font-semibold uppercase tracking-wide text-neutral-500">
             {t("farms.details.overview")}
           </h2>
@@ -93,7 +87,7 @@ export default function FarmDetailsPage() {
             <DetailRow label={t("farms.fields.latitude")} value={farm.latitude} />
             <DetailRow label={t("farms.fields.longitude")} value={farm.longitude} />
           </dl>
-        </div>
+        </Card>
 
         <div>
           <h2 className="text-sm font-semibold uppercase tracking-wide text-neutral-500">
@@ -105,14 +99,14 @@ export default function FarmDetailsPage() {
         </div>
       </div>
 
-      <ConfirmDialog
-        open={confirmOpen}
+      <Dialog
+        open={confirmDialog.isOpen}
+        onClose={confirmDialog.close}
         title={t("farms.deleteConfirmTitle")}
         message={t("farms.deleteConfirmMessage", { name: farm.farmName })}
         confirmLabel={t("farms.actions.delete")}
         isConfirming={deleteFarm.isPending}
         onConfirm={handleDelete}
-        onCancel={() => setConfirmOpen(false)}
       />
     </div>
   );

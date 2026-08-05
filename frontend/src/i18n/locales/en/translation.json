@@ -9,7 +9,8 @@
     "farms": "Farms",
     "login": "Login",
     "register": "Register",
-    "logout": "Logout"
+    "logout": "Logout",
+    "weather": "Weather"
   },
   "auth": {
     "loginTitle": "Welcome back",
@@ -46,7 +47,8 @@
     "welcome": "Welcome, {{name}}",
     "subtitle": "This is your AgriCast AI dashboard foundation. Feature modules (Weather, AI Advisory, Sentinel, Farms, Analytics) arrive in later phases.",
     "accountInfo": "Account information",
-    "connectionStatus": "Backend connection"
+    "connectionStatus": "Backend connection",
+    "yourFarms": "Your farms"
   },
   "landing": {
     "heroTitle": "Precision agriculture decisions, powered by AI",
@@ -67,7 +69,12 @@
     "language": "Language",
     "cancel": "Cancel",
     "confirm": "Confirm",
-    "deleting": "Deleting..."
+    "deleting": "Deleting...",
+    "retry": "Retry",
+    "somethingWentWrong": "Something went wrong",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "close": "Close"
   },
   "farms": {
     "title": "My Farms",
@@ -111,7 +118,8 @@
       "edit": "Edit",
       "delete": "Delete",
       "save": "Save farm",
-      "saveChanges": "Save changes"
+      "saveChanges": "Save changes",
+      "weather": "Weather"
     },
     "empty": {
       "title": "No farms yet",
@@ -121,6 +129,146 @@
     },
     "details": {
       "overview": "Overview"
+    }
+  },
+  "weather": {
+    "title": "Weather",
+    "subtitle": "Select a farm to see its weather.",
+    "tabs": {
+      "forecast": "Forecast",
+      "history": "History"
+    },
+    "currentConditions": "Current conditions",
+    "fields": {
+      "humidity": "Humidity",
+      "pressure": "Pressure",
+      "wind": "Wind",
+      "uvIndex": "UV index",
+      "visibility": "Visibility",
+      "precipitation": "Precipitation",
+      "feelsLike": "Feels like"
+    },
+    "uv": {
+      "low": "Low",
+      "moderate": "Moderate",
+      "high": "High",
+      "veryHigh": "Very high",
+      "extreme": "Extreme",
+      "unknown": "–",
+      "tip": {
+        "low": "Safe to work outdoors without extra protection.",
+        "moderate": "Wear a hat during midday hours.",
+        "high": "Cover up and take breaks in shade.",
+        "veryHigh": "Limit sun exposure between 11am-4pm.",
+        "extreme": "Avoid unprotected sun exposure entirely."
+      }
+    },
+    "hero": {
+      "ariaLabel": "Current weather for {{name}}",
+      "highLow": "H: {{high}} · L: {{low}}"
+    },
+    "updatedAt": "Updated {{time}}",
+    "observedAt": "Observed at {{time}}",
+    "actions": {
+      "refresh": "Refresh"
+    },
+    "highlights": {
+      "title": "Highlights",
+      "sunrise": "Sunrise",
+      "sunset": "Sunset",
+      "sunsetAt": "Sunset at {{time}}",
+      "sunriseAt": "Sunrise at {{time}}",
+      "rainChance": "Chance of rain",
+      "rainChanceHint": "Likelihood of rain today.",
+      "windHint": "Current wind speed at your farm.",
+      "humidityHint": "Moisture level in the air right now."
+    },
+    "hourly": {
+      "title": "Hourly forecast",
+      "now": "Now",
+      "empty": "No hourly data available yet."
+    },
+    "daily": {
+      "title": "7-day forecast",
+      "today": "Today",
+      "empty": "No forecast data available yet."
+    },
+    "history": {
+      "title": "Weather history",
+      "subtitle": "Review past conditions to spot patterns for your farm.",
+      "startDate": "Start date",
+      "endDate": "End date",
+      "loading": "Loading history...",
+      "empty": "No history for this date range yet.",
+      "emptyHint": "Try a different date range.",
+      "avgTemp": "Avg. temperature",
+      "highLowHint": "H: {{high}} · L: {{low}}",
+      "avgRainChance": "Avg. chance of rain",
+      "avgHumidity": "Avg. humidity",
+      "avgWind": "Avg. wind speed",
+      "trends": {
+        "temperature": "Temperature trend",
+        "temperatureMin": "Min temperature",
+        "humidity": "Humidity trend",
+        "rain": "Rain trend",
+        "wind": "Wind trend"
+      }
+    },
+    "alerts": {
+      "title": "Weather alerts",
+      "until": "Until {{time}}"
+    },
+    "summary": {
+      "default": "It's {{condition}} today with a high of {{high}}.",
+      "withRain": "It's {{condition}} today with a high of {{high}} and a {{chance}} chance of rain."
+    },
+    "errors": {
+      "title": "Couldn't load weather",
+      "generic": "Something went wrong while loading weather data."
+    },
+    "empty": {
+      "title": "No weather data yet",
+      "description": "Weather data for this farm isn't available yet."
+    },
+    "picker": {
+      "title": "Choose a farm",
+      "loading": "Loading your farms...",
+      "noFarms": "No farms yet",
+      "noFarmsHint": "Add a farm to start viewing its weather."
+    },
+    "footer": {
+      "source": "Weather data updates periodically and is provided for planning purposes only."
+    },
+    "conditions": {
+      "clearSky": "Clear sky",
+      "mainlyClear": "Mainly clear",
+      "partlyCloudy": "Partly cloudy",
+      "overcast": "Overcast",
+      "fog": "Fog",
+      "rimeFog": "Depositing rime fog",
+      "lightDrizzle": "Light drizzle",
+      "moderateDrizzle": "Moderate drizzle",
+      "denseDrizzle": "Dense drizzle",
+      "lightFreezingDrizzle": "Light freezing drizzle",
+      "denseFreezingDrizzle": "Dense freezing drizzle",
+      "slightRain": "Slight rain",
+      "moderateRain": "Moderate rain",
+      "heavyRain": "Heavy rain",
+      "lightFreezingRain": "Light freezing rain",
+      "heavyFreezingRain": "Heavy freezing rain",
+      "slightSnow": "Slight snow fall",
+      "moderateSnow": "Moderate snow fall",
+      "heavySnow": "Heavy snow fall",
+      "snowGrains": "Snow grains",
+      "slightRainShowers": "Slight rain showers",
+      "moderateRainShowers": "Moderate rain showers",
+      "violentRainShowers": "Violent rain showers",
+      "slightSnowShowers": "Slight snow showers",
+      "heavySnowShowers": "Heavy snow showers",
+      "thunderstorm": "Thunderstorm",
+      "thunderstormHail": "Thunderstorm with slight hail",
+      "thunderstormHeavyHail": "Thunderstorm with heavy hail",
+      "unknown": "Unknown"
     }
   }
 }

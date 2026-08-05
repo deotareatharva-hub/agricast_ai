@@ -1,19 +1,22 @@
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { CloudSun } from "lucide-react";
+import Card from "../../../components/ui/Card";
+import Badge from "../../../components/ui/Badge";
 
 export default function FarmCard({ farm, onDeleteClick }) {
   const { t } = useTranslation();
 
   return (
-    <div className="flex flex-col rounded-xl border border-neutral-200 bg-white p-5 transition hover:border-brand-300 hover:shadow-sm">
+    <Card interactive className="flex flex-col">
       <div className="flex items-start justify-between gap-2">
         <div>
           <h3 className="text-base font-semibold text-neutral-900">{farm.farmName}</h3>
           <p className="text-sm text-neutral-500">{farm.crop}</p>
         </div>
-        <span className="shrink-0 rounded-full bg-brand-50 px-2.5 py-1 text-xs font-medium text-brand-700">
+        <Badge>
           {farm.area} {t(`farms.areaUnits.${farm.areaUnit}`)}
-        </span>
+        </Badge>
       </div>
 
       <p className="mt-3 text-sm text-neutral-500">
@@ -26,6 +29,13 @@ export default function FarmCard({ farm, onDeleteClick }) {
           className="focus-ring font-medium text-brand-700 hover:underline"
         >
           {t("farms.actions.view")}
+        </Link>
+        <Link
+          to={`/dashboard/farms/${farm.id}/weather`}
+          className="focus-ring flex items-center gap-1 font-medium text-sky-alert-500 hover:underline"
+        >
+          <CloudSun className="h-3.5 w-3.5" aria-hidden="true" />
+          {t("farms.actions.weather")}
         </Link>
         <Link
           to={`/dashboard/farms/${farm.id}/edit`}
@@ -41,6 +51,6 @@ export default function FarmCard({ farm, onDeleteClick }) {
           {t("farms.actions.delete")}
         </button>
       </div>
-    </div>
+    </Card>
   );
 }

@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { tokenStorage } from "../lib/axios";
+import { onUnauthorized, tokenStorage } from "../lib/axios";
 import { authApi } from "../features/auth/api/auth.api";
 
 const AuthContext = createContext(null);
@@ -29,6 +29,10 @@ export function AuthProvider({ children }) {
     };
     bootstrap();
   }, []);
+
+  // Keep `user` in sync when the axios interceptor clears an expired/
+  // invalid token out from under us (see lib/axios.js).
+  useEffect(() => onUnauthorized(() => setUser(null)), []);
 
   const login = async (credentials) => {
     const { data } = await authApi.login(credentials);

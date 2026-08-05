@@ -4,6 +4,9 @@ import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 import { useCreateFarm } from "../hooks/useCreateFarm";
 import FarmForm from "../components/FarmForm";
+import PageHeader from "../../../components/ui/PageHeader";
+import Card from "../../../components/ui/Card";
+import Breadcrumb from "../../../components/ui/Breadcrumb";
 
 export default function AddFarmPage() {
   const { t } = useTranslation();
@@ -24,17 +27,22 @@ export default function AddFarmPage() {
 
   return (
     <div className="mx-auto max-w-3xl">
-      <h1 className="text-2xl font-semibold text-neutral-900">{t("farms.addTitle")}</h1>
-      <p className="mt-1 text-sm text-neutral-500">{t("farms.addSubtitle")}</p>
+      <PageHeader
+        breadcrumb={
+          <Breadcrumb items={[{ label: t("farms.title"), to: "/dashboard/farms" }, { label: t("farms.addTitle") }]} />
+        }
+        title={t("farms.addTitle")}
+        subtitle={t("farms.addSubtitle")}
+      />
 
-      <div className="mt-6 rounded-xl border border-neutral-200 bg-white p-6">
+      <Card className="mt-6" padding="lg">
         <FarmForm
           onSubmit={handleSubmit}
           isSubmitting={createFarm.isPending}
           submitLabel={t("farms.actions.save")}
           serverError={serverError}
         />
-      </div>
+      </Card>
     </div>
   );
 }

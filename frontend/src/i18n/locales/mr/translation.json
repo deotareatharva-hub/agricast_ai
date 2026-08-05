@@ -9,7 +9,8 @@
     "farms": "फार्म्स",
     "login": "लॉगिन",
     "register": "नोंदणी करा",
-    "logout": "लॉगआउट"
+    "logout": "लॉगआउट",
+    "weather": "हवामान"
   },
   "auth": {
     "loginTitle": "पुन्हा स्वागत आहे",
@@ -46,7 +47,8 @@
     "welcome": "स्वागत आहे, {{name}}",
     "subtitle": "हे तुमचे AgriCast AI डॅशबोर्ड फाउंडेशन आहे. फीचर मॉड्यूल्स (हवामान, एआय सल्ला, सेंटिनेल, फार्म्स, अॅनालिटिक्स) पुढील टप्प्यांमध्ये येतील.",
     "accountInfo": "खाते माहिती",
-    "connectionStatus": "बॅकएंड कनेक्शन"
+    "connectionStatus": "बॅकएंड कनेक्शन",
+    "yourFarms": "तुमची फार्म्स"
   },
   "landing": {
     "heroTitle": "एआयद्वारे चालित अचूक शेती निर्णय",
@@ -67,7 +69,12 @@
     "language": "भाषा",
     "cancel": "रद्द करा",
     "confirm": "पुष्टी करा",
-    "deleting": "हटवत आहे..."
+    "deleting": "हटवत आहे...",
+    "retry": "पुन्हा प्रयत्न करा",
+    "somethingWentWrong": "काहीतरी चुकले",
+    "openMenu": "मेनू उघडा",
+    "closeMenu": "मेनू बंद करा",
+    "close": "बंद करा"
   },
   "farms": {
     "title": "माझी फार्म्स",
@@ -111,7 +118,8 @@
       "edit": "संपादित करा",
       "delete": "हटवा",
       "save": "फार्म जतन करा",
-      "saveChanges": "बदल जतन करा"
+      "saveChanges": "बदल जतन करा",
+      "weather": "हवामान"
     },
     "empty": {
       "title": "अद्याप कोणतेही फार्म नाही",
@@ -121,6 +129,146 @@
     },
     "details": {
       "overview": "आढावा"
+    }
+  },
+  "weather": {
+    "title": "हवामान",
+    "subtitle": "हवामान पाहण्यासाठी एक शेत निवडा.",
+    "tabs": {
+      "forecast": "अंदाज",
+      "history": "इतिहास"
+    },
+    "currentConditions": "सद्य स्थिती",
+    "fields": {
+      "humidity": "आर्द्रता",
+      "pressure": "दाब",
+      "wind": "वारा",
+      "uvIndex": "यूव्ही निर्देशांक",
+      "visibility": "दृश्यमानता",
+      "precipitation": "पर्जन्य",
+      "feelsLike": "जाणवते"
+    },
+    "uv": {
+      "low": "कमी",
+      "moderate": "मध्यम",
+      "high": "जास्त",
+      "veryHigh": "खूप जास्त",
+      "extreme": "अत्यंत जास्त",
+      "unknown": "–",
+      "tip": {
+        "low": "बाहेर काम करणे सुरक्षित आहे.",
+        "moderate": "दुपारी टोपी घाला.",
+        "high": "अंग झाका आणि सावलीत विश्रांती घ्या.",
+        "veryHigh": "सकाळी ११ ते दुपारी ४ दरम्यान उन्हात जाणे टाळा.",
+        "extreme": "संरक्षणाशिवाय उन्हात अजिबात जाऊ नका."
+      }
+    },
+    "hero": {
+      "ariaLabel": "{{name}} साठी सध्याचे हवामान",
+      "highLow": "कमाल: {{high}} · किमान: {{low}}"
+    },
+    "updatedAt": "{{time}} रोजी अद्ययावत",
+    "observedAt": "{{time}} वाजता नोंदवले",
+    "actions": {
+      "refresh": "रिफ्रेश करा"
+    },
+    "highlights": {
+      "title": "ठळक मुद्दे",
+      "sunrise": "सूर्योदय",
+      "sunset": "सूर्यास्त",
+      "sunsetAt": "सूर्यास्त {{time}} वाजता",
+      "sunriseAt": "सूर्योदय {{time}} वाजता",
+      "rainChance": "पावसाची शक्यता",
+      "rainChanceHint": "आज पाऊस पडण्याची शक्यता.",
+      "windHint": "तुमच्या शेतावरील सध्याचा वाऱ्याचा वेग.",
+      "humidityHint": "हवेतील सध्याची आर्द्रता पातळी."
+    },
+    "hourly": {
+      "title": "तासागणिक अंदाज",
+      "now": "आत्ता",
+      "empty": "अद्याप तासागणिक माहिती उपलब्ध नाही."
+    },
+    "daily": {
+      "title": "7-दिवसांचा अंदाज",
+      "today": "आज",
+      "empty": "अद्याप अंदाज माहिती उपलब्ध नाही."
+    },
+    "history": {
+      "title": "हवामान इतिहास",
+      "subtitle": "तुमच्या शेतासाठी नमुने ओळखण्यासाठी मागील स्थिती पहा.",
+      "startDate": "प्रारंभ तारीख",
+      "endDate": "शेवटची तारीख",
+      "loading": "इतिहास लोड होत आहे...",
+      "empty": "या तारीख श्रेणीसाठी इतिहास नाही.",
+      "emptyHint": "वेगळी तारीख श्रेणी वापरून पहा.",
+      "avgTemp": "सरासरी तापमान",
+      "highLowHint": "कमाल: {{high}} · किमान: {{low}}",
+      "avgRainChance": "सरासरी पावसाची शक्यता",
+      "avgHumidity": "सरासरी आर्द्रता",
+      "avgWind": "सरासरी वाऱ्याचा वेग",
+      "trends": {
+        "temperature": "तापमान कल",
+        "temperatureMin": "किमान तापमान",
+        "humidity": "आर्द्रता कल",
+        "rain": "पाऊस कल",
+        "wind": "वारा कल"
+      }
+    },
+    "alerts": {
+      "title": "हवामान इशारे",
+      "until": "{{time}} पर्यंत"
+    },
+    "summary": {
+      "default": "आज {{condition}} आहे, कमाल तापमान {{high}}.",
+      "withRain": "आज {{condition}} आहे, कमाल तापमान {{high}} आणि पावसाची {{chance}} शक्यता."
+    },
+    "errors": {
+      "title": "हवामान लोड होऊ शकले नाही",
+      "generic": "हवामान माहिती लोड करताना काहीतरी चुकले."
+    },
+    "empty": {
+      "title": "अद्याप हवामान माहिती नाही",
+      "description": "या शेतासाठी हवामान माहिती अद्याप उपलब्ध नाही."
+    },
+    "picker": {
+      "title": "एक शेत निवडा",
+      "loading": "तुमची शेते लोड होत आहेत...",
+      "noFarms": "अद्याप शेत नाही",
+      "noFarmsHint": "हवामान पाहण्यासाठी एक शेत जोडा."
+    },
+    "footer": {
+      "source": "हवामान माहिती वेळोवेळी अद्ययावत होते आणि केवळ नियोजनासाठी आहे."
+    },
+    "conditions": {
+      "clearSky": "निरभ्र आकाश",
+      "mainlyClear": "बहुतांशी निरभ्र",
+      "partlyCloudy": "अंशतः ढगाळ",
+      "overcast": "पूर्ण ढगाळ",
+      "fog": "धुके",
+      "rimeFog": "गोठलेले धुके",
+      "lightDrizzle": "हलकी रिमझिम",
+      "moderateDrizzle": "मध्यम रिमझिम",
+      "denseDrizzle": "दाट रिमझिम",
+      "lightFreezingDrizzle": "हलकी गोठणारी रिमझिम",
+      "denseFreezingDrizzle": "दाट गोठणारी रिमझिम",
+      "slightRain": "हलका पाऊस",
+      "moderateRain": "मध्यम पाऊस",
+      "heavyRain": "मुसळधार पाऊस",
+      "lightFreezingRain": "हलका गोठणारा पाऊस",
+      "heavyFreezingRain": "जोरदार गोठणारा पाऊस",
+      "slightSnow": "हलकी बर्फवृष्टी",
+      "moderateSnow": "मध्यम बर्फवृष्टी",
+      "heavySnow": "जोरदार बर्फवृष्टी",
+      "snowGrains": "बर्फ कण",
+      "slightRainShowers": "हलक्या सरी",
+      "moderateRainShowers": "मध्यम सरी",
+      "violentRainShowers": "जोरदार सरी",
+      "slightSnowShowers": "हलक्या बर्फ सरी",
+      "heavySnowShowers": "जोरदार बर्फ सरी",
+      "thunderstorm": "वादळ",
+      "thunderstormHail": "हलक्या गारांसह वादळ",
+      "thunderstormHeavyHail": "जोरदार गारांसह वादळ",
+      "unknown": "अज्ञात"
     }
   }
 }

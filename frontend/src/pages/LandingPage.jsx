@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../context/AuthContext";
+import { buttonClasses } from "../components/ui/Button";
 
 export default function LandingPage() {
   const { t } = useTranslation();
@@ -21,7 +22,7 @@ export default function LandingPage() {
         <div className="mt-10 flex items-center justify-center gap-4">
           <Link
             to={isAuthenticated ? "/dashboard" : "/register"}
-            className="focus-ring rounded-md bg-brand-600 px-5 py-3 text-sm font-semibold text-white shadow-sm hover:bg-brand-700"
+            className={buttonClasses({ size: "lg" })}
           >
             {t("landing.getStarted")}
           </Link>
