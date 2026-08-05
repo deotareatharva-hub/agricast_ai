@@ -10,7 +10,8 @@
     "login": "Login",
     "register": "Register",
     "logout": "Logout",
-    "weather": "Weather"
+    "weather": "Weather",
+    "satellite": "Satellite"
   },
   "auth": {
     "loginTitle": "Welcome back",
@@ -269,6 +270,145 @@
       "thunderstormHail": "Thunderstorm with slight hail",
       "thunderstormHeavyHail": "Thunderstorm with heavy hail",
       "unknown": "Unknown"
+    }
+  },
+  "satellite": {
+    "title": "Satellite",
+    "subtitle": "Select a farm to view satellite imagery.",
+    "selectFarm": "Select a farm",
+    "hero": {
+      "ariaLabel": "Satellite data for {{name}}",
+      "title": "Satellite Overview",
+      "subtitle": "Sentinel-2 multispectral imagery",
+      "healthGrade": "Health Grade"
+    },
+    "tabs": {
+      "overview": "Overview",
+      "map": "Map",
+      "analysis": "Analysis",
+      "timeline": "Timeline",
+      "history": "History"
+    },
+    "fields": {
+      "lastCapture": "Last Capture",
+      "cloudCover": "Cloud Cover",
+      "captureDate": "Capture Date",
+      "provider": "Provider",
+      "layer": "Layer"
+    },
+    "actions": {
+      "refresh": "Refresh Data",
+      "refreshing": "Refreshing...",
+      "refreshSuccess": "Cache cleared. Fresh imagery loading.",
+      "refreshError": "Refresh failed. Please try again."
+    },
+    "layerSelector": {
+      "title": "Imagery Layer"
+    },
+    "ndvi": {
+      "title": "NDVI Imagery",
+      "subtitle": "Normalized Difference Vegetation Index",
+      "imageAlt": "NDVI satellite image",
+      "noData": "NDVI image not available",
+      "low": "Low",
+      "high": "High",
+      "scaleLabel": "NDVI Scale (−1 to +1)"
+    },
+    "health": {
+      "title": "Vegetation Health Score",
+      "subtitle": "Derived from scene availability and cloud cover",
+      "grade": "Grade",
+      "scoreDescription": "Score combines scene availability, image quality, and cloud cover."
+    },
+    "vegetation": {
+      "title": "Crop Health Assessment",
+      "subtitle": "AI-assisted agronomic summary",
+      "recommendations": "Recommendations",
+      "noData": "No assessment data available"
+    },
+    "cloud": {
+      "title": "Cloud Coverage",
+      "sceneCount": "{{count}} scenes in range",
+      "average": "Average Cloud Cover",
+      "clear": "Clear",
+      "partial": "Partial",
+      "cloudy": "Cloudy",
+      "recentScenes": "Recent Scenes",
+      "noScenes": "No scenes found for this period"
+    },
+    "stats": {
+      "provider": "Provider",
+      "lastCapture": "Last Capture",
+      "cloudCover": "Cloud Cover",
+      "imageSize": "Image Size"
+    },
+    "map": {
+      "farmLocation": "Farm Location",
+      "overlayActive": "Satellite Overlay"
+    },
+    "legend": {
+      "ndviTitle": "NDVI Legend",
+      "water": "Water Body",
+      "bare": "Bare Soil / Urban",
+      "sparse": "Sparse Vegetation",
+      "moderate": "Moderate Vegetation",
+      "healthy": "Healthy Vegetation",
+      "lush": "Dense / Lush Vegetation",
+      "trueColorNote": "True Color imagery — natural colors, no index applied."
+    },
+    "boundary": {
+      "title": "Farm Boundary",
+      "north": "North",
+      "south": "South",
+      "east": "East",
+      "west": "West",
+      "dateRange": "Date Range"
+    },
+    "timeline": {
+      "title": "Satellite Timeline",
+      "subtitle": "Compare periods",
+      "noData": "No timeline data available",
+      "noImageForPeriod": "No image available for this period",
+      "imageAlt": "satellite image"
+    },
+    "comparison": {
+      "title": "Before / After Comparison",
+      "dragHint": "Drag to compare",
+      "noData": "Comparison not available",
+      "noDataHint": "Two time periods are needed to compare.",
+      "before": "Before",
+      "after": "After",
+      "beforeAlt": "Before satellite image",
+      "afterAlt": "After satellite image",
+      "noAfter": "No image available"
+    },
+    "history": {
+      "last7": "Last 7 days",
+      "last30": "Last 30 days",
+      "last90": "Last 90 days",
+      "range": "Date range",
+      "error": "Could not load scene history. Please try again.",
+      "empty": "No scenes found for this date range.",
+      "scenesFound": "{{count}} scenes found",
+      "newestFirst": "Newest first"
+    },
+    "overview": {
+      "currentImage": "Current Satellite Image",
+      "imageSubtitle": "Layer: {{layer}}",
+      "imageAlt": "{{layer}} satellite image",
+      "noImageTitle": "No image available",
+      "noImageDescription": "Satellite imagery could not be retrieved for this farm. Check your Sentinel Hub credentials."
+    },
+    "errors": {
+      "title": "Could not load satellite data",
+      "generic": "Something went wrong while loading satellite imagery."
+    },
+    "empty": {
+      "title": "No satellite data",
+      "description": "Satellite imagery for this farm is not available yet.",
+      "noFarmsTitle": "No farms yet",
+      "noFarmsDescription": "Add a farm to start viewing satellite imagery and vegetation insights.",
+      "addFarm": "Add your first farm"
     }
   }
 }

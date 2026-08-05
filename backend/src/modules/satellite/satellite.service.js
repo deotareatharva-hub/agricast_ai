@@ -6,165 +6,177 @@ import { farmRepository } from "../farms/farm.repository.js";
 import { satelliteRepository } from "./satellite.repository.js";
 import { sentinelClient, SUPPORTED_LAYERS } from "../../integrations/satellite/sentinel.js";
 import { sentinelMapper } from "../../integrations/satellite/sentinelMapper.js";
+import { cacheService } from "./cache.service.js";
+import { computeHealthScore, assessCropHealth } from "./indexCalculator.js";
 
 // Business logic for the satellite module. Controllers never touch the
 // repository, Sentinel Hub client, or mapper directly - same convention as
 // modules/weather/weather.service.js. Every method takes the authenticated
-// userId first so farm ownership is enforced here, in one place, before
-// any satellite request is built or sent.
+// userId first and resolves farm ownership before any external call.
 
-// Shared by every farm-scoped method: confirms the farm exists AND belongs
-// to this user before we touch its coordinates. Reuses farmRepository (the
-// farms module's own repository) so ownership stays a single source of
-// truth, same as weather.service.js does.
-async function getOwnedFarmOrThrow(userId, farmId) {
-  const farm = await farmRepository.findByIdForUser(farmId, userId);
-  if (!farm) {
-    throw ApiError.notFound("Farm not found");
-  }
-  return farm;
-}
+// ---------------------------------------------------------------------------
+// Internal helpers
+// ---------------------------------------------------------------------------
 
 function assertLayerSupported(layer) {
   if (!SUPPORTED_LAYERS.includes(layer)) {
     throw ApiError.badRequest(
-      `Unsupported layer. Supported layers: ${SUPPORTED_LAYERS.join(", ")}`
+      `Unsupported layer "${layer}". Supported: ${SUPPORTED_LAYERS.join(", ")}`
     );
   }
 }
 
-// Sentinel Hub expects a bbox as [minLng, minLat, maxLng, maxLat]. Farms
-// only store a single lat/lng point (db/schema/farms.schema.js has no
-// polygon column), so a small square bounding box is derived around that
-// point using a configurable buffer - this satisfies the "Farm Latitude,
-// Farm Longitude, Bounding Box" requirement without a schema change to the
-// farms module (which this task must not rewrite).
-const METERS_PER_DEGREE_LAT = 111320;
-
-function computeBoundingBox(latitude, longitude, bufferMeters) {
-  const latDelta = bufferMeters / METERS_PER_DEGREE_LAT;
-  const lngDelta =
-    bufferMeters / (METERS_PER_DEGREE_LAT * Math.cos((latitude * Math.PI) / 180));
-
-  return [
-    Number((longitude - lngDelta).toFixed(6)),
-    Number((latitude - latDelta).toFixed(6)),
-    Number((longitude + lngDelta).toFixed(6)),
-    Number((latitude + latDelta).toFixed(6)),
-  ];
-}
-
-// Defaults to the last `defaultRangeDays` days ending today when the
-// caller doesn't supply an explicit range - same "sane default" pattern as
-// weather.service.js's getHistory.
-function resolveDateRange({ startDate, endDate }) {
-  const toDate = endDate ? new Date(endDate) : new Date();
-  const fromDate = startDate
-    ? new Date(startDate)
-    : new Date(toDate.getTime() - env.satellite.defaultRangeDays * 24 * 60 * 60 * 1000);
-
-  if (Number.isNaN(fromDate.getTime()) || Number.isNaN(toDate.getTime())) {
-    throw ApiError.badRequest("Invalid date range");
+async function getOwnedFarmOrThrow(userId, farmId) {
+  const farm = await farmRepository.findByIdForUser(farmId, userId);
+  if (!farm) {
+    throw ApiError.notFound(
+      `Farm ${farmId} not found or does not belong to the current user.`
+    );
   }
-  if (fromDate > toDate) {
-    throw ApiError.badRequest("startDate must be before endDate");
-  }
-
-  const toIsoDate = (d) => d.toISOString().slice(0, 10);
-  return { from: toIsoDate(fromDate), to: toIsoDate(toDate) };
+  return farm;
 }
 
-function hashParams(payload) {
-  return crypto.createHash("sha256").update(JSON.stringify(payload)).digest("hex");
+/**
+ * Convert (lat, lon) to a bounding box [west, south, east, north].
+ * bufferMeters controls how far out the box extends around the centre point.
+ */
+function computeBoundingBox(lat, lon, bufferMeters = 5000) {
+  const EARTH_RADIUS_M = 6_371_000;
+  const latDelta = (bufferMeters / EARTH_RADIUS_M) * (180 / Math.PI);
+  const lonDelta =
+    (bufferMeters / (EARTH_RADIUS_M * Math.cos((lat * Math.PI) / 180))) *
+    (180 / Math.PI);
+  return [lon - lonDelta, lat - latDelta, lon + lonDelta, lat + latDelta];
 }
 
-function isCacheFresh(row) {
-  return Boolean(row) && new Date(row.expiresAt).getTime() > Date.now();
+/**
+ * Resolve a {from, to} date range.
+ * Defaults to the last 30 days when no dates are supplied.
+ */
+function resolveDateRange({ startDate, endDate } = {}) {
+  const to = endDate || new Date().toISOString().slice(0, 10);
+  const from =
+    startDate ||
+    new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+  return { from, to };
 }
 
-function computeExpiresAt() {
-  return new Date(Date.now() + env.satellite.cacheTtlSeconds * 1000);
+function hashParams(layer, bbox, dateRange) {
+  return crypto
+    .createHash("sha256")
+    .update(JSON.stringify({ layer, bbox, dateRange }))
+    .digest("hex")
+    .slice(0, 16);
 }
 
-// Every satellite request (cache hit or miss, success or failure) is
-// logged to satellite_requests for audit/debugging visibility - logging
-// itself is best-effort and never allowed to fail (or mask) the actual
-// request, same convention as weather.service.js's history-save handling.
-async function withRequestLog({ farmId, userId, layer, bbox, dateRange }, work) {
+/**
+ * Wrap a Sentinel Hub call with request logging.
+ * Always writes to satellite_requests, even on failure.
+ */
+async function withRequestLog({ farmId, userId, layer, bbox, dateRange }, fn) {
+  let status = "success";
+  let errorMessage = null;
+  let result;
+  let logMetadata = {};
+  let cacheExpiresAt = null;
+
   try {
-    const { data, meta, logMetadata, cacheExpiresAt } = await work();
-    await satelliteRepository
+    const inner = await fn();
+    result = inner;
+    logMetadata = inner.logMetadata ?? {};
+    cacheExpiresAt = inner.cacheExpiresAt ?? null;
+  } catch (err) {
+    status = "error";
+    errorMessage = err.message;
+    throw err;
+  } finally {
+    satelliteRepository
       .logRequest({
         farmId,
         userId,
         layer,
         bbox,
         dateRange,
-        status: "success",
-        responseMetadata: logMetadata ?? null,
-        expiresAt: cacheExpiresAt ?? null,
+        status,
+        responseMetadata: logMetadata,
+        errorMessage,
+        expiresAt: cacheExpiresAt,
       })
-      .catch((err) =>
-        logger.warn("Satellite request log (success) failed", {
+      .catch((logErr) => {
+        logger.warn("Failed to log satellite request", {
           farmId,
-          message: err.message,
-        })
-      );
-    return { data, meta };
-  } catch (error) {
-    await satelliteRepository
-      .logRequest({
-        farmId,
-        userId,
-        layer,
-        bbox,
-        dateRange,
-        status: "error",
-        errorMessage: error.message,
-      })
-      .catch((err) =>
-        logger.warn("Satellite request log (error) failed", {
-          farmId,
-          message: err.message,
-        })
-      );
-    throw error;
+          message: logErr.message,
+        });
+      });
   }
+
+  return result;
 }
+
+// ---------------------------------------------------------------------------
+// Service methods
+// ---------------------------------------------------------------------------
 
 export const satelliteService = {
-  // Static, no DB/network call - just documents which evalscripts
-  // sentinel.js currently supports.
-  getLayers: () => ({ data: sentinelMapper.mapLayers(SUPPORTED_LAYERS) }),
+  /**
+   * Return the static list of supported layers.
+   * No DB or Sentinel Hub access required.
+   */
+  getLayers() {
+    const layers = sentinelMapper.mapLayers(SUPPORTED_LAYERS);
+    return { data: layers };
+  },
 
-  getImage: async (userId, farmId, { layer, startDate, endDate }) => {
+  /**
+   * Fetch a satellite image for the given farm, layer, and date range.
+   * Results are cached in satellite_cache.
+   */
+  async getImage(userId, farmId, { layer, startDate, endDate }) {
     assertLayerSupported(layer);
     const farm = await getOwnedFarmOrThrow(userId, farmId);
 
     const bbox = computeBoundingBox(farm.latitude, farm.longitude, env.satellite.bboxBufferMeters);
     const dateRange = resolveDateRange({ startDate, endDate });
-    const { width, height } = env.satellite.imageSize;
-    const paramsHash = hashParams({ bbox, dateRange, layer, width, height });
+    const paramsHash = hashParams(layer, bbox, dateRange);
 
+    // Check cache first
     const cached = await satelliteRepository.findCache(farm.id, layer, paramsHash);
-    if (isCacheFresh(cached)) {
+    if (cached && cacheService.isFresh(cached)) {
+      logger.info("Satellite cache hit", { farmId: farm.id, layer });
+      const mapped = {
+        layer: cached.layer,
+        bbox: cached.bbox,
+        dateRange: cached.dateRange,
+        mimeType: cached.imageMimeType,
+        imageBase64: cached.imageBase64,
+        sizeBytes: cached.imageBase64
+          ? Buffer.from(cached.imageBase64, "base64").length
+          : 0,
+      };
       return {
-        data: {
-          layer,
-          bbox,
-          dateRange,
-          mimeType: cached.imageMimeType,
-          imageBase64: cached.imageBase64,
-          sizeBytes: cached.responseMetadata?.sizeBytes ?? null,
+        data: mapped,
+        meta: {
+          farmId: farm.id,
+          cache: { hit: true, expiresAt: cached.expiresAt },
         },
-        meta: { farmId, cache: { hit: true, fetchedAt: cached.requestTime } },
       };
     }
 
     return withRequestLog({ farmId: farm.id, userId, layer, bbox, dateRange }, async () => {
       let raw;
       try {
-        raw = await sentinelClient.fetchImage({ bbox, dateRange, layer, width, height });
+        // BUGFIX: width/height were never passed here, so every Process API
+        // request omitted them. Sentinel Hub's Process API requires either
+        // output.width+output.height OR output.resx+output.resy - without
+        // one of those pairs it returns 400 Bad Request, which made every
+        // single satellite image fetch fail regardless of credentials.
+        raw = await sentinelClient.fetchImage({
+          bbox,
+          dateRange,
+          layer,
+          width: env.satellite.imageSize.width,
+          height: env.satellite.imageSize.height,
+        });
       } catch (error) {
         logger.error("Sentinel Hub image fetch failed", {
           farmId: farm.id,
@@ -173,12 +185,13 @@ export const satelliteService = {
         });
         throw error.isOperational
           ? error
-          : ApiError.internal("Satellite imagery is temporarily unavailable. Please try again shortly.");
+          : ApiError.internal(
+              "Satellite imagery is temporarily unavailable. Please try again shortly."
+            );
       }
 
       const mapped = sentinelMapper.mapImage(raw, { layer, bbox, dateRange });
-      const responseMetadata = { sizeBytes: mapped.sizeBytes };
-      const cacheExpiresAt = computeExpiresAt();
+      const cacheExpiresAt = cacheService.expiresAt();
 
       await satelliteRepository.upsertCache({
         farmId: farm.id,
@@ -186,7 +199,7 @@ export const satelliteService = {
         paramsHash,
         bbox,
         dateRange,
-        responseMetadata,
+        responseMetadata: { sizeBytes: mapped.sizeBytes },
         imageBase64: mapped.imageBase64,
         imageMimeType: mapped.mimeType,
         expiresAt: cacheExpiresAt,
@@ -194,14 +207,17 @@ export const satelliteService = {
 
       return {
         data: mapped,
-        meta: { farmId, cache: { hit: false, fetchedAt: new Date() } },
-        logMetadata: responseMetadata,
+        meta: { farmId: farm.id, cache: { hit: false, fetchedAt: new Date() } },
+        logMetadata: { sizeBytes: mapped.sizeBytes },
         cacheExpiresAt,
       };
     });
   },
 
-  getMetadata: async (userId, farmId, { layer, startDate, endDate }) => {
+  /**
+   * Fetch scene catalog metadata (dates, cloud cover) for a date range.
+   */
+  async getMetadata(userId, farmId, { layer, startDate, endDate }) {
     assertLayerSupported(layer);
     const farm = await getOwnedFarmOrThrow(userId, farmId);
 
@@ -220,15 +236,208 @@ export const satelliteService = {
         });
         throw error.isOperational
           ? error
-          : ApiError.internal("Satellite metadata is temporarily unavailable. Please try again shortly.");
+          : ApiError.internal(
+              "Satellite metadata is temporarily unavailable. Please try again shortly."
+            );
       }
 
       const mapped = sentinelMapper.mapMetadata(raw, { layer, bbox, dateRange });
       return {
         data: mapped,
-        meta: { farmId },
+        meta: { farmId: farm.id },
         logMetadata: { sceneCount: mapped.sceneCount },
       };
     });
+  },
+
+  /**
+   * getCurrent: combined image + metadata + health metrics.
+   * The primary endpoint for the SatellitePage dashboard.
+   */
+  async getCurrent(userId, farmId, { layer, startDate, endDate }) {
+    assertLayerSupported(layer);
+
+    // Fetch image and metadata concurrently
+    const [imageResult, metadataResult] = await Promise.allSettled([
+      this.getImage(userId, farmId, { layer, startDate, endDate }),
+      this.getMetadata(userId, farmId, {
+        layer,
+        startDate: startDate || new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10),
+        endDate,
+      }),
+    ]);
+
+    // BUGFIX: previously both branches of Promise.allSettled were collapsed
+    // straight to `null` on failure with no further signal - the endpoint
+    // always resolved with HTTP 200/success:true, so the frontend's
+    // isError flag was never set and every card silently rendered its
+    // empty ("—") state as if there just happened to be no data, even when
+    // Sentinel Hub was completely unreachable or misconfigured. We now:
+    //   1. Log the real reason for each failure (was previously discarded).
+    //   2. If BOTH image and metadata failed, throw a real error so the
+    //      controller returns a non-200 response with a meaningful message
+    //      and the frontend shows SatelliteError (with retry) instead of a
+    //      false "loaded but empty" dashboard.
+    //   3. If only one side failed, still return the data we do have, but
+    //      keep the failure reason on hand for logging/observability.
+    if (imageResult.status === "rejected") {
+      logger.error("getCurrent: image fetch failed", {
+        farmId,
+        layer,
+        message: imageResult.reason?.message,
+      });
+    }
+    if (metadataResult.status === "rejected") {
+      logger.error("getCurrent: metadata fetch failed", {
+        farmId,
+        layer,
+        message: metadataResult.reason?.message,
+      });
+    }
+
+    if (imageResult.status === "rejected" && metadataResult.status === "rejected") {
+      const reason = imageResult.reason;
+      throw reason?.isOperational
+        ? reason
+        : ApiError.internal(
+            "Satellite imagery is temporarily unavailable. Please try again shortly."
+          );
+    }
+
+    const image =
+      imageResult.status === "fulfilled" ? imageResult.value.data : null;
+    const metadata =
+      metadataResult.status === "fulfilled" ? metadataResult.value.data : null;
+    const imageError =
+      imageResult.status === "rejected"
+        ? imageResult.reason?.message || "Satellite image unavailable"
+        : null;
+    const metadataError =
+      metadataResult.status === "rejected"
+        ? metadataResult.reason?.message || "Satellite metadata unavailable"
+        : null;
+
+    // Compute health score from metadata
+    const health = metadata
+      ? computeHealthScore({
+          sceneCount: metadata.sceneCount,
+          scenes: metadata.scenes,
+        })
+      : null;
+
+    // Compute crop assessment
+    const assessment =
+      metadata
+        ? assessCropHealth({
+            cloudCoverPercent: metadata.scenes?.[0]?.cloudCoverPercent ?? null,
+          })
+        : null;
+
+    return {
+      farmId,
+      image,
+      metadata,
+      health: health
+        ? { ...health, assessment }
+        : null,
+      imageError,
+      metadataError,
+    };
+  },
+
+  /**
+   * getHealthMetrics: scores and crop assessment without a full image payload.
+   */
+  async getHealthMetrics(userId, farmId, { startDate, endDate }) {
+    const { data: metadata, meta } = await this.getMetadata(userId, farmId, {
+      layer: "TRUE_COLOR",
+      startDate,
+      endDate,
+    });
+
+    const health = computeHealthScore({
+      sceneCount: metadata.sceneCount,
+      scenes: metadata.scenes,
+    });
+
+    const assessment = assessCropHealth({
+      cloudCoverPercent: metadata.scenes?.[0]?.cloudCoverPercent ?? null,
+    });
+
+    return {
+      farmId: meta.farmId,
+      health: { ...health, assessment },
+      metadata,
+    };
+  },
+
+  /**
+   * getTimelapse: fetch images for preset time windows.
+   * Returns labeled frames for before/after or animation use.
+   */
+  async getTimelapse(userId, farmId, { layer }) {
+    assertLayerSupported(layer);
+
+    const now = new Date();
+    const fmt = (d) => d.toISOString().slice(0, 10);
+
+    const periods = [
+      {
+        label: "Last Week",
+        period: "week",
+        dateRange: {
+          from: fmt(new Date(now - 7 * 24 * 60 * 60 * 1000)),
+          to: fmt(now),
+        },
+      },
+      {
+        label: "Last Month",
+        period: "month",
+        dateRange: {
+          from: fmt(new Date(now - 30 * 24 * 60 * 60 * 1000)),
+          to: fmt(now),
+        },
+      },
+      {
+        label: "Last Season",
+        period: "season",
+        dateRange: {
+          from: fmt(new Date(now - 90 * 24 * 60 * 60 * 1000)),
+          to: fmt(now),
+        },
+      },
+    ];
+
+    const frames = await Promise.all(
+      periods.map(async (period) => {
+        try {
+          const { data } = await this.getImage(userId, farmId, {
+            layer,
+            startDate: period.dateRange.from,
+            endDate: period.dateRange.to,
+          });
+          return { ...period, image: data };
+        } catch {
+          return { ...period, image: null };
+        }
+      })
+    );
+
+    return { farmId, frames };
+  },
+
+  /**
+   * refreshFarm: invalidate all cached entries for a farm.
+   */
+  async refreshFarm(userId, farmId) {
+    // Verify ownership first
+    await getOwnedFarmOrThrow(userId, farmId);
+
+    const invalidatedRows = await cacheService.invalidateFarm(farmId);
+    return {
+      farmId,
+      invalidatedRows,
+      refreshedAt: new Date().toISOString(),
+    };
   },
 };

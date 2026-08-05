@@ -11,6 +11,7 @@ export const DASHBOARD_NAV_ITEMS = [
   { key: "dashboard", to: "/dashboard" },
   { key: "farms", to: "/dashboard/farms" },
   { key: "weather", to: "/dashboard/weather" },
+  { key: "satellite", to: "/dashboard/satellite" },
 ];
 
 export default function DashboardNav({ onNavigate }) {

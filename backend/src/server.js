@@ -10,6 +10,16 @@ async function start() {
   try {
     await testConnection();
 
+    // Loud, one-time boot warning (not a hard failure - the rest of the
+    // app works fine without it) so a missing Sentinel Hub credential is
+    // obvious in the logs immediately instead of only surfacing later as
+    // silent empty satellite data.
+    if (!env.satellite.sentinel.clientId || !env.satellite.sentinel.clientSecret) {
+      logger.warn(
+        "SENTINEL_CLIENT_ID / SENTINEL_CLIENT_SECRET are not set - the Satellite module will not be able to fetch imagery until both are configured in .env"
+      );
+    }
+
     const server = app.listen(env.port, () => {
       logger.info(`AgriCast AI API listening on port ${env.port}`, {
         environment: env.nodeEnv,

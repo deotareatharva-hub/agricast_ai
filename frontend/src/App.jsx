@@ -31,6 +31,12 @@ const FarmDetailsPage = lazy(() => import("./features/farms/pages/FarmDetailsPag
 
 const WeatherPage = lazy(() => import("./features/weather/pages/WeatherPage"));
 
+// Satellite Module - Sprint 2
+// /dashboard/satellite lets a farmer pick a farm first;
+// /dashboard/farms/:farmId/satellite is the direct, farm-scoped link
+// used from FarmCard and FarmDetailsPage. Both render SatellitePage.
+const SatellitePage = lazy(() => import("./features/satellite/pages/SatellitePage"));
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -71,12 +77,13 @@ function App() {
                   <Route path="/dashboard/farms/:id" element={<FarmDetailsPage />} />
                   <Route path="/dashboard/farms/:id/edit" element={<EditFarmPage />} />
 
-                  {/* Weather Module - /dashboard/weather lets a farmer
-                      pick a farm first; /dashboard/farms/:farmId/weather
-                      is the direct, farm-scoped link used from FarmCard
-                      and FarmDetailsPage. Both render WeatherPage. */}
+                  {/* Weather Module */}
                   <Route path="/dashboard/weather" element={<WeatherPage />} />
                   <Route path="/dashboard/farms/:farmId/weather" element={<WeatherPage />} />
+
+                  {/* Satellite Module - Sprint 2 */}
+                  <Route path="/dashboard/satellite" element={<SatellitePage />} />
+                  <Route path="/dashboard/farms/:farmId/satellite" element={<SatellitePage />} />
                 </Route>
               </Route>
 
