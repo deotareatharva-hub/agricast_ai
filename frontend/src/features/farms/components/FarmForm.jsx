@@ -2,11 +2,6 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { getFarmValidationRules, AREA_UNITS } from "../validation/farmSchema";
 import LocationPicker from "./LocationPicker";
-import Field from "../../../components/ui/Field";
-import Input from "../../../components/ui/Input";
-import Select from "../../../components/ui/Select";
-import Button from "../../../components/ui/Button";
-import ErrorState from "../../../components/ui/ErrorState";
 
 const DEFAULT_VALUES = {
   farmName: "",
@@ -20,6 +15,11 @@ const DEFAULT_VALUES = {
   state: "",
   country: "",
 };
+
+function FieldError({ error }) {
+  if (!error) return null;
+  return <p className="mt-1 text-xs text-red-600">{error.message}</p>;
+}
 
 // Shared form for both "Add Farm" and "Edit Farm" pages. The caller owns
 // the mutation (create vs update) and passes it in as onSubmit.
@@ -53,55 +53,92 @@ export default function FarmForm({
 
   return (
     <form className="space-y-6" onSubmit={handleSubmit(onSubmit)} noValidate>
-      {serverError && <ErrorState message={serverError} />}
+      {serverError && (
+        <div className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700" role="alert">
+          {serverError}
+        </div>
+      )}
 
       <div className="grid gap-4 sm:grid-cols-2">
-        <Field label={t("farms.fields.farmName")} htmlFor="farmName" error={errors.farmName}>
-          <Input id="farmName" type="text" invalid={Boolean(errors.farmName)} {...register("farmName", rules.farmName)} />
-        </Field>
+        <div>
+          <label htmlFor="farmName" className="block text-sm font-medium text-neutral-700">
+            {t("farms.fields.farmName")}
+          </label>
+          <input
+            id="farmName"
+            type="text"
+            className="focus-ring mt-1 block w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+            {...register("farmName", rules.farmName)}
+          />
+          <FieldError error={errors.farmName} />
+        </div>
 
-        <Field label={t("farms.fields.crop")} htmlFor="crop" error={errors.crop}>
-          <Input id="crop" type="text" invalid={Boolean(errors.crop)} {...register("crop", rules.crop)} />
-        </Field>
+        <div>
+          <label htmlFor="crop" className="block text-sm font-medium text-neutral-700">
+            {t("farms.fields.crop")}
+          </label>
+          <input
+            id="crop"
+            type="text"
+            className="focus-ring mt-1 block w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+            {...register("crop", rules.crop)}
+          />
+          <FieldError error={errors.crop} />
+        </div>
 
-        <Field label={t("farms.fields.area")} htmlFor="area" error={errors.area}>
-          <div className="flex gap-2">
-            <Input
+        <div>
+          <label htmlFor="area" className="block text-sm font-medium text-neutral-700">
+            {t("farms.fields.area")}
+          </label>
+          <div className="mt-1 flex gap-2">
+            <input
               id="area"
               type="number"
               step="0.01"
-              invalid={Boolean(errors.area)}
+              className="focus-ring block w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
               {...register("area", rules.area)}
             />
-            <Select {...register("areaUnit")}>
+            <select
+              className="focus-ring rounded-md border border-neutral-300 px-2 py-2 text-sm"
+              {...register("areaUnit")}
+            >
               {AREA_UNITS.map((unit) => (
                 <option key={unit} value={unit}>
                   {t(`farms.areaUnits.${unit}`)}
                 </option>
               ))}
-            </Select>
+            </select>
           </div>
-        </Field>
+          <FieldError error={errors.area} />
+        </div>
 
         <div className="grid grid-cols-2 gap-2">
-          <Field label={t("farms.fields.latitude")} htmlFor="latitude" error={errors.latitude}>
-            <Input
+          <div>
+            <label htmlFor="latitude" className="block text-sm font-medium text-neutral-700">
+              {t("farms.fields.latitude")}
+            </label>
+            <input
               id="latitude"
               type="number"
               step="0.000001"
-              invalid={Boolean(errors.latitude)}
+              className="focus-ring mt-1 block w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
               {...register("latitude", rules.latitude)}
             />
-          </Field>
-          <Field label={t("farms.fields.longitude")} htmlFor="longitude" error={errors.longitude}>
-            <Input
+            <FieldError error={errors.latitude} />
+          </div>
+          <div>
+            <label htmlFor="longitude" className="block text-sm font-medium text-neutral-700">
+              {t("farms.fields.longitude")}
+            </label>
+            <input
               id="longitude"
               type="number"
               step="0.000001"
-              invalid={Boolean(errors.longitude)}
+              className="focus-ring mt-1 block w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
               {...register("longitude", rules.longitude)}
             />
-          </Field>
+            <FieldError error={errors.longitude} />
+          </div>
         </div>
       </div>
 
@@ -119,26 +156,66 @@ export default function FarmForm({
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
-        <Field label={t("farms.fields.village")} htmlFor="village" error={errors.village}>
-          <Input id="village" type="text" invalid={Boolean(errors.village)} {...register("village", rules.village)} />
-        </Field>
+        <div>
+          <label htmlFor="village" className="block text-sm font-medium text-neutral-700">
+            {t("farms.fields.village")}
+          </label>
+          <input
+            id="village"
+            type="text"
+            className="focus-ring mt-1 block w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+            {...register("village", rules.village)}
+          />
+          <FieldError error={errors.village} />
+        </div>
 
-        <Field label={t("farms.fields.district")} htmlFor="district" error={errors.district}>
-          <Input id="district" type="text" invalid={Boolean(errors.district)} {...register("district", rules.district)} />
-        </Field>
+        <div>
+          <label htmlFor="district" className="block text-sm font-medium text-neutral-700">
+            {t("farms.fields.district")}
+          </label>
+          <input
+            id="district"
+            type="text"
+            className="focus-ring mt-1 block w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+            {...register("district", rules.district)}
+          />
+          <FieldError error={errors.district} />
+        </div>
 
-        <Field label={t("farms.fields.state")} htmlFor="state" error={errors.state}>
-          <Input id="state" type="text" invalid={Boolean(errors.state)} {...register("state", rules.state)} />
-        </Field>
+        <div>
+          <label htmlFor="state" className="block text-sm font-medium text-neutral-700">
+            {t("farms.fields.state")}
+          </label>
+          <input
+            id="state"
+            type="text"
+            className="focus-ring mt-1 block w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+            {...register("state", rules.state)}
+          />
+          <FieldError error={errors.state} />
+        </div>
 
-        <Field label={t("farms.fields.country")} htmlFor="country" error={errors.country}>
-          <Input id="country" type="text" invalid={Boolean(errors.country)} {...register("country", rules.country)} />
-        </Field>
+        <div>
+          <label htmlFor="country" className="block text-sm font-medium text-neutral-700">
+            {t("farms.fields.country")}
+          </label>
+          <input
+            id="country"
+            type="text"
+            className="focus-ring mt-1 block w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+            {...register("country", rules.country)}
+          />
+          <FieldError error={errors.country} />
+        </div>
       </div>
 
-      <Button type="submit" fullWidth isLoading={isSubmitting} className="sm:w-auto">
+      <button
+        type="submit"
+        disabled={isSubmitting}
+        className="focus-ring w-full rounded-md bg-brand-600 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-700 disabled:opacity-60 sm:w-auto"
+      >
         {isSubmitting ? t("farms.saving") : submitLabel}
-      </Button>
+      </button>
     </form>
   );
 }

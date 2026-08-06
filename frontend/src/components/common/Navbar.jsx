@@ -2,8 +2,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../../context/AuthContext";
 import LanguageSwitcher from "./LanguageSwitcher";
-import Avatar from "../ui/Avatar";
-import { buttonClasses } from "../ui/Button";
 
 export default function Navbar() {
   const { t } = useTranslation();
@@ -36,14 +34,13 @@ export default function Navbar() {
               >
                 {t("nav.dashboard")}
               </Link>
-              <span className="hidden items-center gap-2 md:flex">
-                <Avatar name={user?.fullName} size="sm" />
-                <span className="text-sm text-neutral-500">{user?.fullName}</span>
+              <span className="hidden text-sm text-neutral-500 md:block">
+                {user?.fullName}
               </span>
               <button
                 type="button"
                 onClick={handleLogout}
-                className={buttonClasses({ variant: "secondary", size: "sm" })}
+                className="focus-ring rounded-md bg-neutral-100 px-3 py-2 text-sm font-medium text-neutral-700 hover:bg-neutral-200"
               >
                 {t("nav.logout")}
               </button>
@@ -56,7 +53,10 @@ export default function Navbar() {
               >
                 {t("nav.login")}
               </Link>
-              <Link to="/register" className={buttonClasses({ size: "sm" })}>
+              <Link
+                to="/register"
+                className="focus-ring rounded-md bg-brand-600 px-3 py-2 text-sm font-medium text-white hover:bg-brand-700"
+              >
                 {t("nav.register")}
               </Link>
             </>

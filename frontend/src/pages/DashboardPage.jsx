@@ -1,12 +1,8 @@
 import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
-import { Sprout } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { api } from "../lib/axios";
-import { useFarms } from "../features/farms/hooks/useFarms";
 import Loading from "../components/common/Loading";
-import Card from "../components/ui/Card";
-import StatCard from "../components/ui/StatCard";
 
 // Simple "is the backend alive" check, used to prove the frontend <-> backend
 // wire-up in Phase 1. Later phases replace this with real feature widgets.
@@ -25,11 +21,6 @@ export default function DashboardPage() {
     retry: 1,
   });
 
-  // First real usage of StatCard/useFarms on this page - proves out the
-  // pattern future Weather/Analytics widgets should follow instead of
-  // each building a bespoke number display.
-  const { data: farms } = useFarms();
-
   return (
     <div className="mx-auto max-w-5xl">
       <h1 className="text-2xl font-semibold text-neutral-900">
@@ -37,10 +28,8 @@ export default function DashboardPage() {
       </h1>
       <p className="mt-2 max-w-2xl text-neutral-600">{t("dashboard.subtitle")}</p>
 
-      <div className="mt-8 grid gap-6 sm:grid-cols-3">
-        <StatCard icon={Sprout} label={t("dashboard.yourFarms")} value={farms?.length ?? "–"} />
-
-        <Card>
+      <div className="mt-8 grid gap-6 sm:grid-cols-2">
+        <div className="rounded-xl border border-neutral-200 bg-white p-5">
           <h2 className="text-sm font-semibold uppercase tracking-wide text-neutral-500">
             {t("dashboard.accountInfo")}
           </h2>
@@ -54,9 +43,9 @@ export default function DashboardPage() {
               <dd className="font-medium text-neutral-900">{user?.email}</dd>
             </div>
           </dl>
-        </Card>
+        </div>
 
-        <Card>
+        <div className="rounded-xl border border-neutral-200 bg-white p-5">
           <h2 className="text-sm font-semibold uppercase tracking-wide text-neutral-500">
             {t("dashboard.connectionStatus")}
           </h2>
@@ -76,7 +65,7 @@ export default function DashboardPage() {
               </div>
             )}
           </div>
-        </Card>
+        </div>
       </div>
     </div>
   );

@@ -2,12 +2,13 @@ import { useQuery } from "@tanstack/react-query";
 import { weatherApi } from "../api/weather.api";
 import { weatherKeys } from "./weatherKeys";
 
-export function useWeatherHistory(farmId, { startDate, endDate } = {}) {
+// Past readings for a farm. Pass { startDate, endDate } (YYYY-MM-DD) to
+// narrow the range; defaults to the last 7 days server-side.
+export function useWeatherHistory(farmId, params = {}) {
   return useQuery({
-    queryKey: weatherKeys.historyRange(farmId, { startDate, endDate }),
-    queryFn: () => weatherApi.getHistory(farmId, { startDate, endDate }),
-    select: (response) => response.data.history ?? [],
-    enabled: Boolean(farmId) && Boolean(startDate) && Boolean(endDate),
-    staleTime: 30 * 60 * 1000,
+    queryKey: weatherKeys.history(farmId, params),
+    queryFn: () => weatherApi.getHistory(farmId, params),
+    select: (response) => response.data.history,
+    enabled: Boolean(farmId),
   });
 }

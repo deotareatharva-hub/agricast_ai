@@ -1,36 +1,13 @@
-import Skeleton from "../../../components/ui/Skeleton";
-
-// Mirrors the real WeatherPage layout (hero, highlights row, hourly
-// strip, 7-day list) so the loading state doesn't jump around once data
-// arrives - same idea as features/farms/components/FarmListSkeleton.jsx.
 export default function WeatherSkeleton() {
   return (
-    <div className="space-y-6" aria-hidden="true">
-      <Skeleton className="h-48 w-full rounded-2xl sm:h-56" />
-
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+    <div className="animate-pulse space-y-6">
+      <div className="h-40 rounded-xl border border-neutral-200 bg-white" />
+      <div className="flex gap-3">
         {Array.from({ length: 6 }).map((_, i) => (
-          <Skeleton key={i} className="h-24 w-full rounded-xl" />
+          <div key={i} className="h-32 w-20 shrink-0 rounded-lg bg-neutral-200" />
         ))}
       </div>
-
-      <div>
-        <Skeleton className="mb-3 h-4 w-32 rounded" />
-        <div className="flex gap-3 overflow-hidden">
-          {Array.from({ length: 8 }).map((_, i) => (
-            <Skeleton key={i} className="h-28 w-16 shrink-0 rounded-xl" />
-          ))}
-        </div>
-      </div>
-
-      <div>
-        <Skeleton className="mb-3 h-4 w-32 rounded" />
-        <div className="space-y-2">
-          {Array.from({ length: 7 }).map((_, i) => (
-            <Skeleton key={i} className="h-14 w-full rounded-xl" />
-          ))}
-        </div>
-      </div>
+      <div className="h-64 rounded-xl border border-neutral-200 bg-white" />
     </div>
   );
 }

@@ -2,20 +2,35 @@
 
 /*
   AgriCast AI - Design Tokens
-  Earthy, precision-agriculture palette: deep forest green primary,
-  warm soil accent, and a clean neutral scale for data-dense dashboards.
+  Precision-agriculture palette: deep forest green primary, live emerald
+  secondary, and a clean neutral scale for data-dense dashboards.
+
+  2026 auth redesign: shifted the brand scale from the original muted
+  earthy green toward a more saturated forest-to-emerald range so the
+  primary/secondary read as "satellite-grade instrumentation" rather than
+  "farmhouse sign". Same token names everywhere else in the app, so this
+  refresh applies site-wide, not just to the auth pages.
 */
 @theme {
-  --color-brand-50: #f1f8f2;
-  --color-brand-100: #dcedde;
-  --color-brand-200: #b9dabe;
-  --color-brand-300: #8cc196;
-  --color-brand-400: #5da26b;
-  --color-brand-500: #3d8449;
-  --color-brand-600: #2c6838;
-  --color-brand-700: #24522e;
-  --color-brand-800: #1f4327;
-  --color-brand-900: #1a3821;
+  --color-brand-50: #f0fdf4;
+  --color-brand-100: #dcfce7;
+  --color-brand-200: #bbf7d0;
+  --color-brand-300: #86efac;
+  --color-brand-400: #4ade80;
+  --color-brand-500: #22c55e;
+  --color-brand-600: #16a34a;
+  --color-brand-700: #166534;
+  --color-brand-800: #14532d;
+  --color-brand-900: #0f3d22;
+  --color-brand-950: #082614;
+
+  /* Sparingly-used highlight accent (badges, focus glow, chart AI markers) */
+  --color-accent-100: #ecfccb;
+  --color-accent-200: #d9f99d;
+  --color-accent-300: #bef264;
+  --color-accent-400: #a3e635;
+  --color-accent-500: #84cc16;
+  --color-accent-600: #65a30d;
 
   --color-soil-500: #b8763e;
   --color-soil-600: #96602f;
@@ -25,7 +40,14 @@
   --color-danger-500: #c0453a;
 
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Space Grotesk", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", monospace;
 }
+
+/* Class-based dark mode (opt-in per screen; the rest of the app has no
+   dark styles yet, so this only takes visible effect where dark: utilities
+   are actually used, i.e. the auth pages). */
+@custom-variant dark (&:where(.dark, .dark *));
 
 html,
 body,
@@ -40,18 +62,4 @@ body {
 
 .focus-ring {
   @apply outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2;
-}
-
-/* Respect the OS-level "reduce motion" setting everywhere - the context
-   doc lists this under Accessibility, but nothing in the app enforced it
-   before this refactor (animate-spin/animate-pulse would run regardless). */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
 }

@@ -9,9 +9,7 @@
     "farms": "फार्म",
     "login": "लॉगिन",
     "register": "पंजीकरण करें",
-    "logout": "लॉगआउट",
-    "weather": "मौसम",
-    "satellite": "सैटेलाइट"
+    "logout": "लॉगआउट"
   },
   "auth": {
     "loginTitle": "वापसी पर स्वागत है",
@@ -32,7 +30,19 @@
     "registering": "खाता बनाया जा रहा है...",
     "loginSuccess": "सफलतापूर्वक लॉगिन हुआ",
     "registerSuccess": "खाता सफलतापूर्वक बनाया गया",
-    "logoutSuccess": "सफलतापूर्वक लॉगआउट हुआ"
+    "logoutSuccess": "सफलतापूर्वक लॉगआउट हुआ",
+    "heroHeadline": "खेत के फैसले, अब कक्षा से दिखने वाले डेटा पर आधारित।",
+    "heroDescription": "मौसम की जानकारी, सैटेलाइट इमेजरी, AI सुझावों और प्रिसिजन एग्रीकल्चर इनसाइट्स की मदद से बेहतर खेती के फैसले लें।",
+    "rememberMe": "मुझे याद रखें",
+    "forgotPassword": "पासवर्ड भूल गए?",
+    "forgotPasswordComingSoon": "पासवर्ड रीसेट अभी उपलब्ध नहीं है।",
+    "orDivider": "या",
+    "continueWithGoogle": "Google से जारी रखें",
+    "googleComingSoon": "Google साइन-इन अभी उपलब्ध नहीं है।",
+    "footerPrivacy": "गोपनीयता",
+    "footerTerms": "नियम",
+    "footerContact": "संपर्क करें",
+    "pageComingSoon": "जल्द आ रहा है"
   },
   "validation": {
     "required": "यह फ़ील्ड आवश्यक है",
@@ -48,8 +58,7 @@
     "welcome": "स्वागत है, {{name}}",
     "subtitle": "यह आपका AgriCast AI डैशबोर्ड फाउंडेशन है। फीचर मॉड्यूल (मौसम, एआई सलाह, सेंटिनल, फार्म, एनालिटिक्स) बाद के चरणों में आएंगे।",
     "accountInfo": "खाता जानकारी",
-    "connectionStatus": "बैकएंड कनेक्शन",
-    "yourFarms": "आपके फार्म"
+    "connectionStatus": "बैकएंड कनेक्शन"
   },
   "landing": {
     "heroTitle": "एआई द्वारा संचालित सटीक कृषि निर्णय",
@@ -70,12 +79,7 @@
     "language": "भाषा",
     "cancel": "रद्द करें",
     "confirm": "पुष्टि करें",
-    "deleting": "हटाया जा रहा है...",
-    "retry": "फिर कोशिश करें",
-    "somethingWentWrong": "कुछ गलत हो गया",
-    "openMenu": "मेनू खोलें",
-    "closeMenu": "मेनू बंद करें",
-    "close": "बंद करें"
+    "deleting": "हटाया जा रहा है..."
   },
   "farms": {
     "title": "मेरे फार्म",
@@ -119,8 +123,7 @@
       "edit": "संपादित करें",
       "delete": "हटाएं",
       "save": "फार्म सहेजें",
-      "saveChanges": "परिवर्तन सहेजें",
-      "weather": "मौसम"
+      "saveChanges": "परिवर्तन सहेजें"
     },
     "empty": {
       "title": "अभी तक कोई फार्म नहीं",
@@ -130,285 +133,6 @@
     },
     "details": {
       "overview": "अवलोकन"
-    }
-  },
-  "weather": {
-    "title": "मौसम",
-    "subtitle": "मौसम देखने के लिए एक फार्म चुनें।",
-    "tabs": {
-      "forecast": "पूर्वानुमान",
-      "history": "इतिहास"
-    },
-    "currentConditions": "वर्तमान स्थिति",
-    "fields": {
-      "humidity": "आर्द्रता",
-      "pressure": "दाब",
-      "wind": "हवा",
-      "uvIndex": "यूवी सूचकांक",
-      "visibility": "दृश्यता",
-      "precipitation": "वर्षा",
-      "feelsLike": "महसूस होता है"
-    },
-    "uv": {
-      "low": "कम",
-      "moderate": "मध्यम",
-      "high": "अधिक",
-      "veryHigh": "बहुत अधिक",
-      "extreme": "अत्यधिक",
-      "unknown": "–",
-      "tip": {
-        "low": "बाहर काम करना सुरक्षित है।",
-        "moderate": "दोपहर में टोपी पहनें।",
-        "high": "शरीर ढकें और छाया में विश्राम करें।",
-        "veryHigh": "सुबह 11 से शाम 4 बजे तक धूप से बचें।",
-        "extreme": "बिना सुरक्षा के धूप में न रहें।"
-      }
-    },
-    "hero": {
-      "ariaLabel": "{{name}} के लिए वर्तमान मौसम",
-      "highLow": "अधि: {{high}} · न्यून: {{low}}"
-    },
-    "updatedAt": "{{time}} को अपडेट किया गया",
-    "observedAt": "{{time}} पर देखा गया",
-    "actions": {
-      "refresh": "ताज़ा करें"
-    },
-    "highlights": {
-      "title": "मुख्य बातें",
-      "sunrise": "सूर्योदय",
-      "sunset": "सूर्यास्त",
-      "sunsetAt": "सूर्यास्त {{time}} पर",
-      "sunriseAt": "सूर्योदय {{time}} पर",
-      "rainChance": "बारिश की संभावना",
-      "rainChanceHint": "आज बारिश होने की संभावना।",
-      "windHint": "आपके फार्म पर वर्तमान हवा की गति।",
-      "humidityHint": "हवा में अभी नमी का स्तर।"
-    },
-    "hourly": {
-      "title": "प्रति घंटा पूर्वानुमान",
-      "now": "अभी",
-      "empty": "अभी तक कोई प्रति घंटा डेटा उपलब्ध नहीं है।"
-    },
-    "daily": {
-      "title": "7-दिन का पूर्वानुमान",
-      "today": "आज",
-      "empty": "अभी तक कोई पूर्वानुमान डेटा उपलब्ध नहीं है।"
-    },
-    "history": {
-      "title": "मौसम इतिहास",
-      "subtitle": "अपने फार्म के लिए पैटर्न जानने हेतु पिछली स्थिति देखें।",
-      "startDate": "प्रारंभ तिथि",
-      "endDate": "समाप्ति तिथि",
-      "loading": "इतिहास लोड हो रहा है...",
-      "empty": "इस तिथि सीमा के लिए कोई इतिहास नहीं है।",
-      "emptyHint": "कोई अलग तिथि सीमा आज़माएं।",
-      "avgTemp": "औसत तापमान",
-      "highLowHint": "अधि: {{high}} · न्यून: {{low}}",
-      "avgRainChance": "औसत बारिश संभावना",
-      "avgHumidity": "औसत आर्द्रता",
-      "avgWind": "औसत हवा की गति",
-      "trends": {
-        "temperature": "तापमान रुझान",
-        "temperatureMin": "न्यूनतम तापमान",
-        "humidity": "आर्द्रता रुझान",
-        "rain": "वर्षा रुझान",
-        "wind": "हवा रुझान"
-      }
-    },
-    "alerts": {
-      "title": "मौसम चेतावनी",
-      "until": "{{time}} तक"
-    },
-    "summary": {
-      "default": "आज {{condition}} है, अधिकतम तापमान {{high}}।",
-      "withRain": "आज {{condition}} है, अधिकतम तापमान {{high}} और बारिश की {{chance}} संभावना।"
-    },
-    "errors": {
-      "title": "मौसम लोड नहीं हो सका",
-      "generic": "मौसम डेटा लोड करते समय कुछ गलत हो गया।"
-    },
-    "empty": {
-      "title": "अभी तक मौसम डेटा नहीं",
-      "description": "इस फार्म के लिए मौसम डेटा अभी उपलब्ध नहीं है।"
-    },
-    "picker": {
-      "title": "एक फार्म चुनें",
-      "loading": "आपके फार्म लोड हो रहे हैं...",
-      "noFarms": "अभी तक कोई फार्म नहीं",
-      "noFarmsHint": "मौसम देखने के लिए एक फार्म जोड़ें।"
-    },
-    "footer": {
-      "source": "मौसम डेटा समय-समय पर अपडेट होता है और केवल योजना बनाने के लिए है।"
-    },
-    "conditions": {
-      "clearSky": "साफ आसमान",
-      "mainlyClear": "मुख्यतः साफ",
-      "partlyCloudy": "आंशिक बादल",
-      "overcast": "घने बादल",
-      "fog": "कोहरा",
-      "rimeFog": "पाला कोहरा",
-      "lightDrizzle": "हल्की बूंदाबांदी",
-      "moderateDrizzle": "मध्यम बूंदाबांदी",
-      "denseDrizzle": "घनी बूंदाबांदी",
-      "lightFreezingDrizzle": "हल्की जमने वाली बूंदाबांदी",
-      "denseFreezingDrizzle": "घनी जमने वाली बूंदाबांदी",
-      "slightRain": "हल्की बारिश",
-      "moderateRain": "मध्यम बारिश",
-      "heavyRain": "भारी बारिश",
-      "lightFreezingRain": "हल्की जमने वाली बारिश",
-      "heavyFreezingRain": "भारी जमने वाली बारिश",
-      "slightSnow": "हल्की बर्फबारी",
-      "moderateSnow": "मध्यम बर्फबारी",
-      "heavySnow": "भारी बर्फबारी",
-      "snowGrains": "बर्फ के कण",
-      "slightRainShowers": "हल्की बौछारें",
-      "moderateRainShowers": "मध्यम बौछारें",
-      "violentRainShowers": "तेज़ बौछारें",
-      "slightSnowShowers": "हल्की बर्फ की बौछारें",
-      "heavySnowShowers": "भारी बर्फ की बौछारें",
-      "thunderstorm": "आंधी-तूफान",
-      "thunderstormHail": "हल्के ओलों के साथ तूफान",
-      "thunderstormHeavyHail": "भारी ओलों के साथ तूफान",
-      "unknown": "अज्ञात"
-    }
-  },
-  "satellite": {
-    "title": "सैटेलाइट",
-    "subtitle": "सैटेलाइट इमेजरी देखने के लिए एक फार्म चुनें।",
-    "selectFarm": "फार्म चुनें",
-    "hero": {
-      "ariaLabel": "{{name}} के लिए सैटेलाइट डेटा",
-      "title": "सैटेलाइट अवलोकन",
-      "subtitle": "Sentinel-2 मल्टीस्पेक्ट्रल इमेजरी",
-      "healthGrade": "स्वास्थ्य ग्रेड"
-    },
-    "tabs": {
-      "overview": "अवलोकन",
-      "map": "मानचित्र",
-      "analysis": "विश्लेषण",
-      "timeline": "टाइमलाइन",
-      "history": "इतिहास"
-    },
-    "fields": {
-      "lastCapture": "अंतिम कैप्चर",
-      "cloudCover": "बादल आवरण",
-      "captureDate": "कैप्चर तिथि",
-      "provider": "प्रदाता",
-      "layer": "परत"
-    },
-    "actions": {
-      "refresh": "डेटा रीफ्रेश करें",
-      "refreshing": "रीफ्रेश हो रहा है...",
-      "refreshSuccess": "कैश साफ हुआ। नई इमेजरी लोड हो रही है।",
-      "refreshError": "रीफ्रेश विफल। कृपया पुनः प्रयास करें।"
-    },
-    "layerSelector": {
-      "title": "इमेजरी परत"
-    },
-    "ndvi": {
-      "title": "NDVI इमेजरी",
-      "subtitle": "नॉर्मलाइज्ड डिफरेंस वेजिटेशन इंडेक्स",
-      "imageAlt": "NDVI सैटेलाइट इमेज",
-      "noData": "NDVI इमेज उपलब्ध नहीं",
-      "low": "कम",
-      "high": "अधिक",
-      "scaleLabel": "NDVI स्केल (−1 से +1)"
-    },
-    "health": {
-      "title": "वनस्पति स्वास्थ्य स्कोर",
-      "subtitle": "दृश्य उपलब्धता और बादल आवरण से व्युत्पन्न",
-      "grade": "ग्रेड",
-      "scoreDescription": "स्कोर दृश्य उपलब्धता, इमेज गुणवत्ता और बादल आवरण को मिलाता है।"
-    },
-    "vegetation": {
-      "title": "फसल स्वास्थ्य मूल्यांकन",
-      "subtitle": "एआई-सहायक कृषि सारांश",
-      "recommendations": "सिफारिशें",
-      "noData": "कोई मूल्यांकन डेटा उपलब्ध नहीं"
-    },
-    "cloud": {
-      "title": "बादल आवरण",
-      "sceneCount": "श्रेणी में {{count}} दृश्य",
-      "average": "औसत बादल आवरण",
-      "clear": "साफ",
-      "partial": "आंशिक",
-      "cloudy": "बादल",
-      "recentScenes": "हालिया दृश्य",
-      "noScenes": "इस अवधि के लिए कोई दृश्य नहीं"
-    },
-    "stats": {
-      "provider": "प्रदाता",
-      "lastCapture": "अंतिम कैप्चर",
-      "cloudCover": "बादल आवरण",
-      "imageSize": "इमेज आकार"
-    },
-    "map": {
-      "farmLocation": "फार्म स्थान",
-      "overlayActive": "सैटेलाइट ओवरले"
-    },
-    "legend": {
-      "ndviTitle": "NDVI लेजेंड",
-      "water": "जल निकाय",
-      "bare": "खाली मिट्टी / शहरी",
-      "sparse": "विरल वनस्पति",
-      "moderate": "मध्यम वनस्पति",
-      "healthy": "स्वस्थ वनस्पति",
-      "lush": "घनी / हरी-भरी वनस्पति",
-      "trueColorNote": "ट्रू कलर इमेजरी — प्राकृतिक रंग, कोई इंडेक्स लागू नहीं।"
-    },
-    "boundary": {
-      "title": "फार्म सीमा",
-      "north": "उत्तर",
-      "south": "दक्षिण",
-      "east": "पूर्व",
-      "west": "पश्चिम",
-      "dateRange": "दिनांक सीमा"
-    },
-    "timeline": {
-      "title": "सैटेलाइट टाइमलाइन",
-      "subtitle": "अवधियों की तुलना करें",
-      "noData": "टाइमलाइन डेटा उपलब्ध नहीं",
-      "noImageForPeriod": "इस अवधि के लिए कोई इमेज उपलब्ध नहीं",
-      "imageAlt": "सैटेलाइट इमेज"
-    },
-    "comparison": {
-      "title": "पहले / बाद की तुलना",
-      "dragHint": "तुलना करने के लिए खींचें",
-      "noData": "तुलना उपलब्ध नहीं",
-      "noDataHint": "तुलना के लिए दो समय अवधि आवश्यक हैं।",
-      "before": "पहले",
-      "after": "बाद",
-      "beforeAlt": "पहले की सैटेलाइट इमेज",
-      "afterAlt": "बाद की सैटेलाइट इमेज",
-      "noAfter": "कोई इमेज उपलब्ध नहीं"
-    },
-    "history": {
-      "last7": "पिछले 7 दिन",
-      "last30": "पिछले 30 दिन",
-      "last90": "पिछले 90 दिन",
-      "range": "दिनांक सीमा",
-      "error": "दृश्य इतिहास लोड नहीं हो सका। कृपया पुनः प्रयास करें।",
-      "empty": "इस दिनांक सीमा के लिए कोई दृश्य नहीं मिला।",
-      "scenesFound": "{{count}} दृश्य मिले",
-      "newestFirst": "नवीनतम पहले"
-    },
-    "overview": {
-      "currentImage": "वर्तमान सैटेलाइट इमेज",
-      "imageSubtitle": "परत: {{layer}}",
-      "imageAlt": "{{layer}} सैटेलाइट इमेज",
-      "noImageTitle": "कोई इमेज उपलब्ध नहीं",
-      "noImageDescription": "इस फार्म के लिए सैटेलाइट इमेजरी प्राप्त नहीं हो सकी।"
-    },
-    "errors": {
-      "title": "सैटेलाइट डेटा लोड नहीं हो सका",
-      "generic": "सैटेलाइट इमेजरी लोड करते समय कुछ गलत हो गया।"
-    },
-    "empty": {
-      "title": "कोई सैटेलाइट डेटा नहीं",
-      "description": "इस फार्म के लिए सैटेलाइट इमेजरी अभी उपलब्ध नहीं है।",
-      "noFarmsTitle": "अभी कोई फार्म नहीं",
-      "noFarmsDescription": "सैटेलाइट इमेजरी देखने के लिए एक फार्म जोड़ें।",
-      "addFarm": "अपना पहला फार्म जोड़ें"
     }
   }
 }

@@ -1,57 +1,46 @@
-import { motion, AnimatePresence } from "framer-motion";
-import { useTranslation } from "react-i18next";
-import { AlertTriangle } from "lucide-react";
-import { formatDateTime, toIntlLocale } from "../utils/weatherFormatters";
+// Backend doesn't ship a dedicated alerts endpoint yet, so alerts here are
+// simple, transparent thresholds computed from data we already fetched -
+// not a hidden model. Kept intentionally conservative.
+function buildAlerts({ current, daily }) {
+  const alerts = [];
 
-// Optional - only renders when the backend includes an `alerts` array on
-// the current-weather response (documented as optional in
-// WeatherIntegrationChecklist.md, since not every Open-Meteo-backed setup
-// has a severe-weather feed wired up yet). Renders nothing rather than an
-// empty state when there's simply no active alert - an empty alerts
-// section would read as "something's missing" on a page that's otherwise
-// fine.
-const SEVERITY_CLASSES = {
-  severe: "border-danger-500/30 bg-red-50 text-danger-500",
-  moderate: "border-warn-500/30 bg-amber-50 text-soil-600",
-  minor: "border-sky-alert-500/30 bg-blue-50 text-sky-alert-500",
-};
+  if (current?.windSpeed >= 40) {
+    alerts.push({ level: "warn", text: `High wind speed (${current.windSpeed} km/h)` });
+  }
+  if (current?.uvIndex >= 8) {
+    alerts.push({ level: "warn", text: `Very high UV index (${current.uvIndex})` });
+  }
+  const heavyRainDay = daily?.find((d) => d.rainProbabilityMax >= 80);
+  if (heavyRainDay) {
+    alerts.push({
+      level: "info",
+      text: `Heavy rain likely on ${new Date(heavyRainDay.date).toLocaleDateString([], {
+        weekday: "long",
+      })} (${heavyRainDay.rainProbabilityMax}% chance)`,
+    });
+  }
 
-export default function WeatherAlerts({ alerts = [] }) {
-  const { t, i18n } = useTranslation();
-  const locale = toIntlLocale(i18n.language);
+  return alerts;
+}
 
-  if (!alerts || alerts.length === 0) return null;
+export default function WeatherAlerts({ current, daily }) {
+  const alerts = buildAlerts({ current, daily });
+  if (!alerts.length) return null;
 
   return (
-    <section aria-labelledby="weather-alerts-heading" className="space-y-2">
-      <h2 id="weather-alerts-heading" className="sr-only">
-        {t("weather.alerts.title")}
-      </h2>
-      <AnimatePresence initial={false}>
-        {alerts.map((alert) => (
-          <motion.div
-            key={alert.id || alert.title}
-            role="alert"
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className={`flex items-start gap-3 rounded-xl border px-4 py-3 ${
-              SEVERITY_CLASSES[alert.severity] || SEVERITY_CLASSES.minor
-            }`}
-          >
-            <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0" aria-hidden="true" />
-            <div className="min-w-0">
-              <p className="text-sm font-semibold">{alert.title}</p>
-              {alert.description && <p className="mt-0.5 text-sm opacity-90">{alert.description}</p>}
-              {alert.endTime && (
-                <p className="mt-1 text-xs opacity-70">
-                  {t("weather.alerts.until", { time: formatDateTime(alert.endTime, locale) })}
-                </p>
-              )}
-            </div>
-          </motion.div>
-        ))}
-      </AnimatePresence>
-    </section>
+    <div className="flex flex-col gap-2">
+      {alerts.map((alert, i) => (
+        <div
+          key={i}
+          className={`rounded-lg px-4 py-2.5 text-sm font-medium ${
+            alert.level === "warn"
+              ? "bg-warn-500/10 text-soil-600"
+              : "bg-sky-alert-500/10 text-sky-alert-500"
+          }`}
+        >
+          ⚠️ {alert.text}
+        </div>
+      ))}
+    </div>
   );
 }

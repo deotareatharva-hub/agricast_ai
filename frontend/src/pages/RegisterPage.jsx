@@ -3,11 +3,10 @@ import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
+import { motion } from "framer-motion";
+import { AlertCircle, Mail, User } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
-import Field from "../components/ui/Field";
-import Input from "../components/ui/Input";
-import Button from "../components/ui/Button";
-import ErrorState from "../components/ui/ErrorState";
+import { AuthField, PasswordInput } from "../components/auth";
 
 export default function RegisterPage() {
   const { t } = useTranslation();
@@ -39,81 +38,88 @@ export default function RegisterPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-semibold text-neutral-900">
+      <h1 className="font-display text-2xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-50">
         {t("auth.registerTitle")}
       </h1>
-      <p className="mt-1 text-sm text-neutral-500">{t("auth.registerSubtitle")}</p>
+      <p className="mt-1 text-sm text-neutral-500 dark:text-neutral-400">{t("auth.registerSubtitle")}</p>
 
       <form className="mt-6 space-y-4" onSubmit={handleSubmit(onSubmit)} noValidate>
-        {serverError && <ErrorState message={serverError} />}
+        {serverError && (
+          <motion.div
+            initial={{ opacity: 0, y: -6 }}
+            animate={{ opacity: 1, y: 0 }}
+            role="alert"
+            className="flex items-start gap-2 rounded-xl border border-danger-500/20 bg-danger-500/5 px-3 py-2.5 text-sm text-danger-500"
+          >
+            <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
+            {serverError}
+          </motion.div>
+        )}
 
-        <Field label={t("auth.fullName")} htmlFor="fullName" error={errors.fullName}>
-          <Input
-            id="fullName"
-            type="text"
-            autoComplete="name"
-            invalid={Boolean(errors.fullName)}
-            {...register("fullName", {
-              required: t("validation.required"),
-              minLength: { value: 2, message: t("validation.minLength", { count: 2 }) },
-            })}
-          />
-        </Field>
+        <AuthField
+          id="fullName"
+          type="text"
+          autoComplete="name"
+          icon={User}
+          label={t("auth.fullName")}
+          error={errors.fullName?.message}
+          {...register("fullName", {
+            required: t("validation.required"),
+            minLength: { value: 2, message: t("validation.minLength", { count: 2 }) },
+          })}
+        />
 
-        <Field label={t("auth.email")} htmlFor="email" error={errors.email}>
-          <Input
-            id="email"
-            type="email"
-            autoComplete="email"
-            invalid={Boolean(errors.email)}
-            {...register("email", {
-              required: t("validation.required"),
-              pattern: {
-                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                message: t("validation.invalidEmail"),
-              },
-            })}
-          />
-        </Field>
+        <AuthField
+          id="email"
+          type="email"
+          autoComplete="email"
+          icon={Mail}
+          label={t("auth.email")}
+          error={errors.email?.message}
+          {...register("email", {
+            required: t("validation.required"),
+            pattern: {
+              value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+              message: t("validation.invalidEmail"),
+            },
+          })}
+        />
 
-        <Field label={t("auth.password")} htmlFor="password" error={errors.password}>
-          <Input
-            id="password"
-            type="password"
-            autoComplete="new-password"
-            invalid={Boolean(errors.password)}
-            {...register("password", {
-              required: t("validation.required"),
-              minLength: { value: 8, message: t("validation.minLength", { count: 8 }) },
-            })}
-          />
-        </Field>
+        <PasswordInput
+          id="password"
+          autoComplete="new-password"
+          label={t("auth.password")}
+          error={errors.password?.message}
+          {...register("password", {
+            required: t("validation.required"),
+            minLength: { value: 8, message: t("validation.minLength", { count: 8 }) },
+          })}
+        />
 
-        <Field
+        <PasswordInput
+          id="confirmPassword"
+          autoComplete="new-password"
           label={t("auth.confirmPassword")}
-          htmlFor="confirmPassword"
-          error={errors.confirmPassword}
-        >
-          <Input
-            id="confirmPassword"
-            type="password"
-            autoComplete="new-password"
-            invalid={Boolean(errors.confirmPassword)}
-            {...register("confirmPassword", {
-              required: t("validation.required"),
-              validate: (value) => value === password || t("validation.passwordMismatch"),
-            })}
-          />
-        </Field>
+          error={errors.confirmPassword?.message}
+          {...register("confirmPassword", {
+            required: t("validation.required"),
+            validate: (value) => value === password || t("validation.passwordMismatch"),
+          })}
+        />
 
-        <Button type="submit" fullWidth isLoading={isSubmitting}>
+        <motion.button
+          type="submit"
+          disabled={isSubmitting}
+          whileTap={{ scale: 0.98 }}
+          className="w-full rounded-xl bg-gradient-to-r from-brand-600 to-brand-700 px-4 py-2.5 text-sm font-semibold text-white shadow-sm shadow-brand-900/20 outline-none transition-all duration-200 hover:from-brand-500 hover:to-brand-600 focus-visible:ring-4 focus-visible:ring-brand-500/30 disabled:cursor-not-allowed disabled:opacity-60"
+        >
           {isSubmitting ? t("auth.registering") : t("auth.registerButton")}
-        </Button>
+        </motion.button>
       </form>
 
-      <p className="mt-6 text-center text-sm text-neutral-500">
+      <p className="mt-6 text-center text-sm text-neutral-500 dark:text-neutral-400">
         {t("auth.haveAccount")}{" "}
-        <Link to="/login" className="font-medium text-brand-700 hover:underline">
+        <Link to="/login" className="font-medium text-brand-600 hover:underline dark:text-brand-400">
           {t("auth.signIn")}
         </Link>
       </p>

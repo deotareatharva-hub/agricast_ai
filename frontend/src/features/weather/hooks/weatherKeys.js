@@ -1,11 +1,7 @@
 export const weatherKeys = {
   all: ["weather"],
-  farm: (farmId) => [...weatherKeys.all, farmId],
-
-  current: (farmId) => [...weatherKeys.farm(farmId), "current"],
-  hourly: (farmId) => [...weatherKeys.farm(farmId), "hourly"],
-  daily: (farmId) => [...weatherKeys.farm(farmId), "daily"],
-
-  history: (farmId) => [...weatherKeys.farm(farmId), "history"],
-  historyRange: (farmId, params) => [...weatherKeys.history(farmId), params],
+  current: (farmId) => [...weatherKeys.all, "current", farmId],
+  hourly: (farmId) => [...weatherKeys.all, "hourly", farmId],
+  daily: (farmId) => [...weatherKeys.all, "daily", farmId],
+  history: (farmId, params) => [...weatherKeys.all, "history", farmId, params],
 };

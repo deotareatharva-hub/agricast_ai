@@ -7,12 +7,7 @@ import { useDeleteFarm } from "../hooks/useDeleteFarm";
 import FarmCard from "../components/FarmCard";
 import EmptyState from "../components/EmptyState";
 import FarmListSkeleton from "../components/FarmListSkeleton";
-import PageHeader from "../../../components/ui/PageHeader";
-import Input from "../../../components/ui/Input";
-import ErrorState from "../../../components/ui/ErrorState";
-import Dialog from "../../../components/ui/Dialog";
-import { buttonClasses } from "../../../components/ui/Button";
-import { useDebouncedValue } from "../../../hooks/useDebouncedValue";
+import ConfirmDialog from "../components/ConfirmDialog";
 
 export default function MyFarmsPage() {
   const { t } = useTranslation();
@@ -20,15 +15,8 @@ export default function MyFarmsPage() {
   const [crop, setCrop] = useState("");
   const [farmPendingDelete, setFarmPendingDelete] = useState(null);
 
-  // Debounced so typing a search term doesn't fire a network request on
-  // every keystroke (see FrontendAudit.md - "Performance Problems").
-  const debouncedSearch = useDebouncedValue(search);
-  const debouncedCrop = useDebouncedValue(crop);
-  const filters = useMemo(
-    () => ({ search: debouncedSearch, crop: debouncedCrop }),
-    [debouncedSearch, debouncedCrop]
-  );
-  const { data: farms, isLoading, isError, error, refetch } = useFarms(filters);
+  const filters = useMemo(() => ({ search, crop }), [search, crop]);
+  const { data: farms, isLoading, isError, error } = useFarms(filters);
   const deleteFarm = useDeleteFarm();
 
   const hasFilters = Boolean(search || crop);
@@ -46,37 +34,44 @@ export default function MyFarmsPage() {
 
   return (
     <div className="mx-auto max-w-6xl">
-      <PageHeader
-        title={t("farms.title")}
-        subtitle={t("farms.subtitle")}
-        actions={
-          <Link to="/dashboard/farms/new" className={buttonClasses()}>
-            {t("farms.actions.addFarm")}
-          </Link>
-        }
-      />
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h1 className="text-2xl font-semibold text-neutral-900">{t("farms.title")}</h1>
+          <p className="mt-1 text-sm text-neutral-500">{t("farms.subtitle")}</p>
+        </div>
+        <Link
+          to="/dashboard/farms/new"
+          className="focus-ring inline-flex w-fit items-center rounded-md bg-brand-600 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-700"
+        >
+          {t("farms.actions.addFarm")}
+        </Link>
+      </div>
 
       <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-        <Input
+        <input
           type="search"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder={t("farms.searchPlaceholder")}
-          className="sm:max-w-xs"
+          className="focus-ring block w-full rounded-md border border-neutral-300 px-3 py-2 text-sm sm:max-w-xs"
         />
-        <Input
+        <input
           type="search"
           value={crop}
           onChange={(e) => setCrop(e.target.value)}
           placeholder={t("farms.filterCropPlaceholder")}
-          className="sm:max-w-xs"
+          className="focus-ring block w-full rounded-md border border-neutral-300 px-3 py-2 text-sm sm:max-w-xs"
         />
       </div>
 
       <div className="mt-6">
         {isLoading && <FarmListSkeleton />}
 
-        {isError && <ErrorState message={error?.message || t("farms.loadError")} onRetry={refetch} />}
+        {isError && (
+          <p className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">
+            {error?.message || t("farms.loadError")}
+          </p>
+        )}
 
         {!isLoading && !isError && farms?.length === 0 && (
           <EmptyState hasFilters={hasFilters} />
@@ -91,9 +86,8 @@ export default function MyFarmsPage() {
         )}
       </div>
 
-      <Dialog
+      <ConfirmDialog
         open={Boolean(farmPendingDelete)}
-        onClose={() => setFarmPendingDelete(null)}
         title={t("farms.deleteConfirmTitle")}
         message={t("farms.deleteConfirmMessage", {
           name: farmPendingDelete?.farmName,
@@ -101,6 +95,7 @@ export default function MyFarmsPage() {
         confirmLabel={t("farms.actions.delete")}
         isConfirming={deleteFarm.isPending}
         onConfirm={handleConfirmDelete}
+        onCancel={() => setFarmPendingDelete(null)}
       />
     </div>
   );

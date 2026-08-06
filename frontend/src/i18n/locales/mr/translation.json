@@ -9,9 +9,7 @@
     "farms": "फार्म्स",
     "login": "लॉगिन",
     "register": "नोंदणी करा",
-    "logout": "लॉगआउट",
-    "weather": "हवामान",
-    "satellite": "उपग्रह"
+    "logout": "लॉगआउट"
   },
   "auth": {
     "loginTitle": "पुन्हा स्वागत आहे",
@@ -32,7 +30,19 @@
     "registering": "खाते तयार करत आहे...",
     "loginSuccess": "यशस्वीरित्या लॉगिन झाले",
     "registerSuccess": "खाते यशस्वीरित्या तयार झाले",
-    "logoutSuccess": "यशस्वीरित्या लॉगआउट झाले"
+    "logoutSuccess": "यशस्वीरित्या लॉगआउट झाले",
+    "heroHeadline": "शेतीचे निर्णय, आता कक्षेतून दिसणाऱ्या डेटावर आधारित.",
+    "heroDescription": "हवामान माहिती, उपग्रह प्रतिमा, AI शिफारसी आणि प्रिसिजन शेती अंतर्दृष्टी वापरून अधिक स्मार्ट शेती निर्णय घ्या.",
+    "rememberMe": "मला लक्षात ठेवा",
+    "forgotPassword": "पासवर्ड विसरलात?",
+    "forgotPasswordComingSoon": "पासवर्ड रीसेट अद्याप उपलब्ध नाही.",
+    "orDivider": "किंवा",
+    "continueWithGoogle": "Google सह सुरू ठेवा",
+    "googleComingSoon": "Google साइन-इन अद्याप उपलब्ध नाही.",
+    "footerPrivacy": "गोपनीयता",
+    "footerTerms": "अटी",
+    "footerContact": "संपर्क",
+    "pageComingSoon": "लवकरच येत आहे"
   },
   "validation": {
     "required": "हे फील्ड आवश्यक आहे",
@@ -48,8 +58,7 @@
     "welcome": "स्वागत आहे, {{name}}",
     "subtitle": "हे तुमचे AgriCast AI डॅशबोर्ड फाउंडेशन आहे. फीचर मॉड्यूल्स (हवामान, एआय सल्ला, सेंटिनेल, फार्म्स, अॅनालिटिक्स) पुढील टप्प्यांमध्ये येतील.",
     "accountInfo": "खाते माहिती",
-    "connectionStatus": "बॅकएंड कनेक्शन",
-    "yourFarms": "तुमची फार्म्स"
+    "connectionStatus": "बॅकएंड कनेक्शन"
   },
   "landing": {
     "heroTitle": "एआयद्वारे चालित अचूक शेती निर्णय",
@@ -70,12 +79,7 @@
     "language": "भाषा",
     "cancel": "रद्द करा",
     "confirm": "पुष्टी करा",
-    "deleting": "हटवत आहे...",
-    "retry": "पुन्हा प्रयत्न करा",
-    "somethingWentWrong": "काहीतरी चुकले",
-    "openMenu": "मेनू उघडा",
-    "closeMenu": "मेनू बंद करा",
-    "close": "बंद करा"
+    "deleting": "हटवत आहे..."
   },
   "farms": {
     "title": "माझी फार्म्स",
@@ -119,8 +123,7 @@
       "edit": "संपादित करा",
       "delete": "हटवा",
       "save": "फार्म जतन करा",
-      "saveChanges": "बदल जतन करा",
-      "weather": "हवामान"
+      "saveChanges": "बदल जतन करा"
     },
     "empty": {
       "title": "अद्याप कोणतेही फार्म नाही",
@@ -130,285 +133,6 @@
     },
     "details": {
       "overview": "आढावा"
-    }
-  },
-  "weather": {
-    "title": "हवामान",
-    "subtitle": "हवामान पाहण्यासाठी एक शेत निवडा.",
-    "tabs": {
-      "forecast": "अंदाज",
-      "history": "इतिहास"
-    },
-    "currentConditions": "सद्य स्थिती",
-    "fields": {
-      "humidity": "आर्द्रता",
-      "pressure": "दाब",
-      "wind": "वारा",
-      "uvIndex": "यूव्ही निर्देशांक",
-      "visibility": "दृश्यमानता",
-      "precipitation": "पर्जन्य",
-      "feelsLike": "जाणवते"
-    },
-    "uv": {
-      "low": "कमी",
-      "moderate": "मध्यम",
-      "high": "जास्त",
-      "veryHigh": "खूप जास्त",
-      "extreme": "अत्यंत जास्त",
-      "unknown": "–",
-      "tip": {
-        "low": "बाहेर काम करणे सुरक्षित आहे.",
-        "moderate": "दुपारी टोपी घाला.",
-        "high": "अंग झाका आणि सावलीत विश्रांती घ्या.",
-        "veryHigh": "सकाळी ११ ते दुपारी ४ दरम्यान उन्हात जाणे टाळा.",
-        "extreme": "संरक्षणाशिवाय उन्हात अजिबात जाऊ नका."
-      }
-    },
-    "hero": {
-      "ariaLabel": "{{name}} साठी सध्याचे हवामान",
-      "highLow": "कमाल: {{high}} · किमान: {{low}}"
-    },
-    "updatedAt": "{{time}} रोजी अद्ययावत",
-    "observedAt": "{{time}} वाजता नोंदवले",
-    "actions": {
-      "refresh": "रिफ्रेश करा"
-    },
-    "highlights": {
-      "title": "ठळक मुद्दे",
-      "sunrise": "सूर्योदय",
-      "sunset": "सूर्यास्त",
-      "sunsetAt": "सूर्यास्त {{time}} वाजता",
-      "sunriseAt": "सूर्योदय {{time}} वाजता",
-      "rainChance": "पावसाची शक्यता",
-      "rainChanceHint": "आज पाऊस पडण्याची शक्यता.",
-      "windHint": "तुमच्या शेतावरील सध्याचा वाऱ्याचा वेग.",
-      "humidityHint": "हवेतील सध्याची आर्द्रता पातळी."
-    },
-    "hourly": {
-      "title": "तासागणिक अंदाज",
-      "now": "आत्ता",
-      "empty": "अद्याप तासागणिक माहिती उपलब्ध नाही."
-    },
-    "daily": {
-      "title": "7-दिवसांचा अंदाज",
-      "today": "आज",
-      "empty": "अद्याप अंदाज माहिती उपलब्ध नाही."
-    },
-    "history": {
-      "title": "हवामान इतिहास",
-      "subtitle": "तुमच्या शेतासाठी नमुने ओळखण्यासाठी मागील स्थिती पहा.",
-      "startDate": "प्रारंभ तारीख",
-      "endDate": "शेवटची तारीख",
-      "loading": "इतिहास लोड होत आहे...",
-      "empty": "या तारीख श्रेणीसाठी इतिहास नाही.",
-      "emptyHint": "वेगळी तारीख श्रेणी वापरून पहा.",
-      "avgTemp": "सरासरी तापमान",
-      "highLowHint": "कमाल: {{high}} · किमान: {{low}}",
-      "avgRainChance": "सरासरी पावसाची शक्यता",
-      "avgHumidity": "सरासरी आर्द्रता",
-      "avgWind": "सरासरी वाऱ्याचा वेग",
-      "trends": {
-        "temperature": "तापमान कल",
-        "temperatureMin": "किमान तापमान",
-        "humidity": "आर्द्रता कल",
-        "rain": "पाऊस कल",
-        "wind": "वारा कल"
-      }
-    },
-    "alerts": {
-      "title": "हवामान इशारे",
-      "until": "{{time}} पर्यंत"
-    },
-    "summary": {
-      "default": "आज {{condition}} आहे, कमाल तापमान {{high}}.",
-      "withRain": "आज {{condition}} आहे, कमाल तापमान {{high}} आणि पावसाची {{chance}} शक्यता."
-    },
-    "errors": {
-      "title": "हवामान लोड होऊ शकले नाही",
-      "generic": "हवामान माहिती लोड करताना काहीतरी चुकले."
-    },
-    "empty": {
-      "title": "अद्याप हवामान माहिती नाही",
-      "description": "या शेतासाठी हवामान माहिती अद्याप उपलब्ध नाही."
-    },
-    "picker": {
-      "title": "एक शेत निवडा",
-      "loading": "तुमची शेते लोड होत आहेत...",
-      "noFarms": "अद्याप शेत नाही",
-      "noFarmsHint": "हवामान पाहण्यासाठी एक शेत जोडा."
-    },
-    "footer": {
-      "source": "हवामान माहिती वेळोवेळी अद्ययावत होते आणि केवळ नियोजनासाठी आहे."
-    },
-    "conditions": {
-      "clearSky": "निरभ्र आकाश",
-      "mainlyClear": "बहुतांशी निरभ्र",
-      "partlyCloudy": "अंशतः ढगाळ",
-      "overcast": "पूर्ण ढगाळ",
-      "fog": "धुके",
-      "rimeFog": "गोठलेले धुके",
-      "lightDrizzle": "हलकी रिमझिम",
-      "moderateDrizzle": "मध्यम रिमझिम",
-      "denseDrizzle": "दाट रिमझिम",
-      "lightFreezingDrizzle": "हलकी गोठणारी रिमझिम",
-      "denseFreezingDrizzle": "दाट गोठणारी रिमझिम",
-      "slightRain": "हलका पाऊस",
-      "moderateRain": "मध्यम पाऊस",
-      "heavyRain": "मुसळधार पाऊस",
-      "lightFreezingRain": "हलका गोठणारा पाऊस",
-      "heavyFreezingRain": "जोरदार गोठणारा पाऊस",
-      "slightSnow": "हलकी बर्फवृष्टी",
-      "moderateSnow": "मध्यम बर्फवृष्टी",
-      "heavySnow": "जोरदार बर्फवृष्टी",
-      "snowGrains": "बर्फ कण",
-      "slightRainShowers": "हलक्या सरी",
-      "moderateRainShowers": "मध्यम सरी",
-      "violentRainShowers": "जोरदार सरी",
-      "slightSnowShowers": "हलक्या बर्फ सरी",
-      "heavySnowShowers": "जोरदार बर्फ सरी",
-      "thunderstorm": "वादळ",
-      "thunderstormHail": "हलक्या गारांसह वादळ",
-      "thunderstormHeavyHail": "जोरदार गारांसह वादळ",
-      "unknown": "अज्ञात"
-    }
-  },
-  "satellite": {
-    "title": "उपग्रह",
-    "subtitle": "उपग्रह प्रतिमा पाहण्यासाठी एक शेत निवडा।",
-    "selectFarm": "शेत निवडा",
-    "hero": {
-      "ariaLabel": "{{name}} साठी उपग्रह डेटा",
-      "title": "उपग्रह आढावा",
-      "subtitle": "Sentinel-2 मल्टीस्पेक्ट्रल प्रतिमा",
-      "healthGrade": "आरोग्य श्रेणी"
-    },
-    "tabs": {
-      "overview": "आढावा",
-      "map": "नकाशा",
-      "analysis": "विश्लेषण",
-      "timeline": "टाइमलाइन",
-      "history": "इतिहास"
-    },
-    "fields": {
-      "lastCapture": "शेवटचे कॅप्चर",
-      "cloudCover": "ढग आच्छादन",
-      "captureDate": "कॅप्चर तारीख",
-      "provider": "प्रदाता",
-      "layer": "स्तर"
-    },
-    "actions": {
-      "refresh": "डेटा रिफ्रेश करा",
-      "refreshing": "रिफ्रेश होत आहे...",
-      "refreshSuccess": "कॅश साफ झाले. नवीन प्रतिमा लोड होत आहे.",
-      "refreshError": "रिफ्रेश अयशस्वी. कृपया पुन्हा प्रयत्न करा."
-    },
-    "layerSelector": {
-      "title": "प्रतिमा स्तर"
-    },
-    "ndvi": {
-      "title": "NDVI प्रतिमा",
-      "subtitle": "नॉर्मलाइज्ड डिफरन्स व्हेजिटेशन इंडेक्स",
-      "imageAlt": "NDVI उपग्रह प्रतिमा",
-      "noData": "NDVI प्रतिमा उपलब्ध नाही",
-      "low": "कमी",
-      "high": "जास्त",
-      "scaleLabel": "NDVI स्केल (−1 ते +1)"
-    },
-    "health": {
-      "title": "वनस्पती आरोग्य स्कोर",
-      "subtitle": "दृश्य उपलब्धता आणि ढग आच्छादनातून काढलेले",
-      "grade": "श्रेणी",
-      "scoreDescription": "स्कोर दृश्य उपलब्धता, प्रतिमा गुणवत्ता आणि ढग आच्छादन एकत्र करतो."
-    },
-    "vegetation": {
-      "title": "पीक आरोग्य मूल्यांकन",
-      "subtitle": "AI-सहाय्यित कृषी सारांश",
-      "recommendations": "शिफारसी",
-      "noData": "कोणताही मूल्यांकन डेटा उपलब्ध नाही"
-    },
-    "cloud": {
-      "title": "ढग आच्छादन",
-      "sceneCount": "श्रेणीत {{count}} दृश्ये",
-      "average": "सरासरी ढग आच्छादन",
-      "clear": "स्वच्छ",
-      "partial": "आंशिक",
-      "cloudy": "ढगाळ",
-      "recentScenes": "अलीकडील दृश्ये",
-      "noScenes": "या कालावधीसाठी कोणतीही दृश्ये नाहीत"
-    },
-    "stats": {
-      "provider": "प्रदाता",
-      "lastCapture": "शेवटचे कॅप्चर",
-      "cloudCover": "ढग आच्छादन",
-      "imageSize": "प्रतिमा आकार"
-    },
-    "map": {
-      "farmLocation": "शेत स्थान",
-      "overlayActive": "उपग्रह आच्छादन"
-    },
-    "legend": {
-      "ndviTitle": "NDVI आख्यायिका",
-      "water": "जलाशय",
-      "bare": "उघडी माती / शहरी",
-      "sparse": "विरळ वनस्पती",
-      "moderate": "मध्यम वनस्पती",
-      "healthy": "निरोगी वनस्पती",
-      "lush": "दाट / हिरवीगार वनस्पती",
-      "trueColorNote": "ट्रू कलर प्रतिमा — नैसर्गिक रंग, कोणताही इंडेक्स लागू नाही."
-    },
-    "boundary": {
-      "title": "शेत सीमा",
-      "north": "उत्तर",
-      "south": "दक्षिण",
-      "east": "पूर्व",
-      "west": "पश्चिम",
-      "dateRange": "तारीख श्रेणी"
-    },
-    "timeline": {
-      "title": "उपग्रह टाइमलाइन",
-      "subtitle": "कालावधींची तुलना करा",
-      "noData": "टाइमलाइन डेटा उपलब्ध नाही",
-      "noImageForPeriod": "या कालावधीसाठी कोणतीही प्रतिमा उपलब्ध नाही",
-      "imageAlt": "उपग्रह प्रतिमा"
-    },
-    "comparison": {
-      "title": "आधी / नंतर तुलना",
-      "dragHint": "तुलना करण्यासाठी ड्रॅग करा",
-      "noData": "तुलना उपलब्ध नाही",
-      "noDataHint": "तुलनेसाठी दोन कालावधी आवश्यक आहेत.",
-      "before": "आधी",
-      "after": "नंतर",
-      "beforeAlt": "आधीची उपग्रह प्रतिमा",
-      "afterAlt": "नंतरची उपग्रह प्रतिमा",
-      "noAfter": "कोणतीही प्रतिमा उपलब्ध नाही"
-    },
-    "history": {
-      "last7": "गेले 7 दिवस",
-      "last30": "गेले 30 दिवस",
-      "last90": "गेले 90 दिवस",
-      "range": "तारीख श्रेणी",
-      "error": "दृश्य इतिहास लोड होऊ शकला नाही.",
-      "empty": "या तारीख श्रेणीसाठी कोणतीही दृश्ये आढळली नाहीत.",
-      "scenesFound": "{{count}} दृश्ये आढळली",
-      "newestFirst": "नवीनतम प्रथम"
-    },
-    "overview": {
-      "currentImage": "सध्याची उपग्रह प्रतिमा",
-      "imageSubtitle": "स्तर: {{layer}}",
-      "imageAlt": "{{layer}} उपग्रह प्रतिमा",
-      "noImageTitle": "कोणतीही प्रतिमा उपलब्ध नाही",
-      "noImageDescription": "या शेतासाठी उपग्रह प्रतिमा मिळवता आली नाही."
-    },
-    "errors": {
-      "title": "उपग्रह डेटा लोड होऊ शकला नाही",
-      "generic": "उपग्रह प्रतिमा लोड करताना काहीतरी चूक झाली."
-    },
-    "empty": {
-      "title": "कोणताही उपग्रह डेटा नाही",
-      "description": "या शेतासाठी उपग्रह प्रतिमा अद्याप उपलब्ध नाही.",
-      "noFarmsTitle": "अद्याप कोणतेही शेत नाही",
-      "noFarmsDescription": "उपग्रह प्रतिमा पाहण्यासाठी शेत जोडा.",
-      "addFarm": "तुमचे पहिले शेत जोडा"
     }
   }
 }
