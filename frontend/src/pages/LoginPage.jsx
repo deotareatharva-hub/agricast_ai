@@ -6,7 +6,8 @@ import { toast } from "react-toastify";
 import { motion } from "framer-motion";
 import { AlertCircle, Mail } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
-import { AuthField, PasswordInput, RememberMe, SocialLoginButton } from "../components/auth";
+import { AuthField, PasswordInput, RememberMe } from "../components/auth";
+import GoogleLoginButton from "../features/auth/components/GoogleLoginButton";
 
 export default function LoginPage() {
   const { t } = useTranslation();
@@ -101,9 +102,12 @@ export default function LoginPage() {
           <span className="h-px flex-1 bg-neutral-200 dark:bg-neutral-700" />
         </div>
 
-        <SocialLoginButton
-          label={t("auth.continueWithGoogle", "Continue with Google")}
-          onClick={() => toast.info(t("auth.googleComingSoon", "Google sign-in isn't available yet."))}
+        <GoogleLoginButton
+          onSuccess={() => {
+            toast.success(t("auth.loginSuccess"));
+            const redirectTo = location.state?.from?.pathname || "/dashboard";
+            navigate(redirectTo, { replace: true });
+          }}
         />
       </form>
 

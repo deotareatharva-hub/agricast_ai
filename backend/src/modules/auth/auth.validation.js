@@ -38,3 +38,11 @@ export const loginValidation = [
 
   body("password").notEmpty().withMessage("Password is required"),
 ];
+
+export const googleLoginValidation = [
+  body("credential")
+    .notEmpty()
+    .withMessage("Google credential is required")
+    .isString()
+    .withMessage("Google credential must be a string"),
+];

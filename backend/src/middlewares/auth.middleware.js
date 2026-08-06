@@ -15,8 +15,8 @@ export const requireAuth = asyncHandler(async (req, res, next) => {
   const token = header.split(" ")[1];
 
   try {
-    const payload = jwtUtil.verify(token);
-    req.user = { id: payload.sub, email: payload.email };
+    const payload = jwtUtil.verifyAccessToken(token);
+    req.user = { id: payload.sub, email: payload.email, role: payload.role || "farmer" };
     next();
   } catch {
     throw ApiError.unauthorized("Invalid or expired token");

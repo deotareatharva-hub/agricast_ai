@@ -17,6 +17,24 @@ export const authApi = {
     return data;
   },
 
+  // `credential` is the ID token Google Identity Services hands back to
+  // the frontend after a successful Google sign-in.
+  google: async (credential) => {
+    const { data } = await api.post("/auth/google", { credential });
+    return data;
+  },
+
+  // Reads the HttpOnly refresh cookie server-side; no body needed here.
+  refresh: async () => {
+    const { data } = await api.post("/auth/refresh");
+    return data;
+  },
+
+  logout: async () => {
+    const { data } = await api.post("/auth/logout");
+    return data;
+  },
+
   getProfile: async () => {
     const { data } = await api.get("/auth/me");
     return data;

@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import { AlertCircle, Mail, User } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { AuthField, PasswordInput } from "../components/auth";
+import GoogleLoginButton from "../features/auth/components/GoogleLoginButton";
 
 export default function RegisterPage() {
   const { t } = useTranslation();
@@ -115,6 +116,14 @@ export default function RegisterPage() {
         >
           {isSubmitting ? t("auth.registering") : t("auth.registerButton")}
         </motion.button>
+
+        <div className="flex items-center gap-3 py-1 text-xs font-medium uppercase tracking-wide text-neutral-400 dark:text-neutral-500">
+          <span className="h-px flex-1 bg-neutral-200 dark:bg-neutral-700" />
+          {t("auth.orDivider", "Or")}
+          <span className="h-px flex-1 bg-neutral-200 dark:bg-neutral-700" />
+        </div>
+
+        <GoogleLoginButton onSuccess={() => navigate("/dashboard", { replace: true })} />
       </form>
 
       <p className="mt-6 text-center text-sm text-neutral-500 dark:text-neutral-400">

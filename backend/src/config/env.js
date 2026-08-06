@@ -26,7 +26,23 @@ export const env = {
   jwtSecret: process.env.JWT_SECRET,
   jwtExpiresIn: process.env.JWT_EXPIRES_IN || "7d",
 
+  // Auth upgrade: short-lived access token + long-lived rotating refresh
+  // token. jwtSecret/jwtExpiresIn above are kept as-is (existing email
+  // login still works unchanged); these are additive.
+  jwtAccessSecret: process.env.JWT_SECRET,
+  jwtAccessExpiresIn: process.env.JWT_ACCESS_EXPIRES_IN || "15m",
+  jwtRefreshSecret: process.env.JWT_REFRESH_SECRET || process.env.JWT_SECRET,
+  jwtRefreshExpiresIn: process.env.JWT_REFRESH_EXPIRES_IN || "30d",
+  jwtRefreshExpiresMs: Number(process.env.JWT_REFRESH_EXPIRES_MS) || 30 * 24 * 60 * 60 * 1000,
+
   bcryptSaltRounds: Number(process.env.BCRYPT_SALT_ROUNDS) || 12,
+
+  google: {
+    clientId: process.env.GOOGLE_CLIENT_ID || "",
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
+  },
+
+  frontendUrl: process.env.FRONTEND_URL || process.env.CORS_ORIGIN || "http://localhost:5173",
 
   // Weather module (Open-Meteo). Cache TTLs are deliberately different per
   // forecast type: current conditions go stale fast, daily outlooks barely

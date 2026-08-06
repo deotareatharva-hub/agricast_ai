@@ -34,7 +34,15 @@ export default function Navbar() {
               >
                 {t("nav.dashboard")}
               </Link>
-              <span className="hidden text-sm text-neutral-500 md:block">
+              <span className="hidden items-center gap-2 text-sm text-neutral-500 md:flex">
+                {user?.avatarUrl && (
+                  <img
+                    src={user.avatarUrl}
+                    alt=""
+                    className="h-6 w-6 rounded-full object-cover"
+                    referrerPolicy="no-referrer"
+                  />
+                )}
                 {user?.fullName}
               </span>
               <button

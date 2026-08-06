@@ -1,0 +1,150 @@
+{
+  "info": {
+    "name": "AgriCast AI - Authentication",
+    "description": "Email/password auth, Google OAuth, JWT access tokens, and refresh-token rotation. Import alongside the existing collections in this folder.\n\nSet the collection variable `baseUrl` (default http://localhost:5000/api/v1) and enable 'Automatically follow cookies' / 'Send cookies' in your Postman cookie jar so the refreshToken HttpOnly cookie persists between the login and refresh/logout requests.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:5000/api/v1" },
+    { "key": "accessToken", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Register (email/password)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const body = pm.response.json();",
+              "if (body?.data?.accessToken) pm.collectionVariables.set('accessToken', body.data.accessToken);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"fullName\": \"Asha Patil\",\n  \"email\": \"asha@example.com\",\n  \"password\": \"Password123\"\n}"
+        },
+        "url": { "raw": "{{baseUrl}}/auth/register", "host": ["{{baseUrl}}"], "path": ["auth", "register"] }
+      },
+      "response": [
+        {
+          "name": "201 Created",
+          "body": "{\n  \"success\": true,\n  \"message\": \"Account created successfully\",\n  \"data\": {\n    \"user\": {\n      \"id\": \"b1f2c3d4-...\",\n      \"fullName\": \"Asha Patil\",\n      \"email\": \"asha@example.com\",\n      \"avatarUrl\": null,\n      \"provider\": \"local\",\n      \"role\": \"farmer\",\n      \"isVerified\": false,\n      \"createdAt\": \"2026-08-06T10:00:00.000Z\",\n      \"updatedAt\": \"2026-08-06T10:00:00.000Z\"\n    },\n    \"token\": \"<jwt-access-token>\",\n    \"accessToken\": \"<jwt-access-token>\"\n  }\n}"
+        },
+        {
+          "name": "409 Conflict - email already exists",
+          "body": "{\n  \"success\": false,\n  \"message\": \"An account with this email already exists\",\n  \"data\": null\n}"
+        }
+      ]
+    },
+    {
+      "name": "Login (email/password)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const body = pm.response.json();",
+              "if (body?.data?.accessToken) pm.collectionVariables.set('accessToken', body.data.accessToken);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"asha@example.com\",\n  \"password\": \"Password123\"\n}"
+        },
+        "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth", "login"] }
+      },
+      "response": [
+        {
+          "name": "200 OK",
+          "body": "{\n  \"success\": true,\n  \"message\": \"Logged in successfully\",\n  \"data\": {\n    \"user\": { \"id\": \"b1f2c3d4-...\", \"fullName\": \"Asha Patil\", \"email\": \"asha@example.com\", \"provider\": \"local\", \"role\": \"farmer\" },\n    \"token\": \"<jwt-access-token>\",\n    \"accessToken\": \"<jwt-access-token>\"\n  }\n}"
+        },
+        {
+          "name": "401 Unauthorized - bad credentials",
+          "body": "{\n  \"success\": false,\n  \"message\": \"Invalid email or password\",\n  \"data\": null\n}"
+        }
+      ]
+    },
+    {
+      "name": "Google Login",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"credential\": \"<Google ID token from Google Identity Services on the frontend>\"\n}"
+        },
+        "url": { "raw": "{{baseUrl}}/auth/google", "host": ["{{baseUrl}}"], "path": ["auth", "google"] }
+      },
+      "response": [
+        {
+          "name": "200 OK - new or existing Google user",
+          "body": "{\n  \"success\": true,\n  \"message\": \"Logged in with Google successfully\",\n  \"data\": {\n    \"user\": { \"id\": \"...\", \"fullName\": \"Asha Patil\", \"email\": \"asha@gmail.com\", \"avatarUrl\": \"https://lh3.googleusercontent.com/...\", \"provider\": \"google\", \"role\": \"farmer\", \"isVerified\": true },\n    \"token\": \"<jwt-access-token>\",\n    \"accessToken\": \"<jwt-access-token>\"\n  }\n}"
+        },
+        {
+          "name": "401 Unauthorized - invalid/expired credential",
+          "body": "{\n  \"success\": false,\n  \"message\": \"Invalid or expired Google credential\",\n  \"data\": null\n}"
+        }
+      ]
+    },
+    {
+      "name": "Refresh Session",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const body = pm.response.json();",
+              "if (body?.data?.accessToken) pm.collectionVariables.set('accessToken', body.data.accessToken);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": { "mode": "raw", "raw": "" },
+        "url": { "raw": "{{baseUrl}}/auth/refresh", "host": ["{{baseUrl}}"], "path": ["auth", "refresh"] },
+        "description": "Relies on the HttpOnly refreshToken cookie set by register/login/google - no body needed. Rotates the refresh token."
+      },
+      "response": [
+        { "name": "200 OK - rotated", "body": "{\n  \"success\": true,\n  \"message\": \"Session refreshed successfully\",\n  \"data\": { \"user\": { \"...\": \"...\" }, \"token\": \"<new-access-token>\", \"accessToken\": \"<new-access-token>\" }\n}" },
+        { "name": "401 Unauthorized - missing/expired/reused token", "body": "{\n  \"success\": false,\n  \"message\": \"Refresh token has already been used. Please log in again.\",\n  \"data\": null\n}" }
+      ]
+    },
+    {
+      "name": "Get Current User (/auth/me)",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+        "url": { "raw": "{{baseUrl}}/auth/me", "host": ["{{baseUrl}}"], "path": ["auth", "me"] }
+      },
+      "response": [
+        { "name": "200 OK", "body": "{\n  \"success\": true,\n  \"message\": \"Profile fetched successfully\",\n  \"data\": { \"user\": { \"id\": \"...\", \"fullName\": \"Asha Patil\", \"email\": \"asha@example.com\", \"role\": \"farmer\" } }\n}" },
+        { "name": "401 Unauthorized - missing/expired access token", "body": "{\n  \"success\": false,\n  \"message\": \"Invalid or expired token\",\n  \"data\": null\n}" }
+      ]
+    },
+    {
+      "name": "Logout",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": { "raw": "{{baseUrl}}/auth/logout", "host": ["{{baseUrl}}"], "path": ["auth", "logout"] },
+        "description": "Revokes the current refresh token server-side and clears the cookie."
+      },
+      "response": [
+        { "name": "200 OK", "body": "{\n  \"success\": true,\n  \"message\": \"Logged out successfully\",\n  \"data\": null\n}" }
+      ]
+    }
+  ]
+}

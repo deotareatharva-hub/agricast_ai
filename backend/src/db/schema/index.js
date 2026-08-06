@@ -2,6 +2,7 @@
 // `import { users } from "../db/schema/index.js"` without knowing which
 // file a given table lives in.
 export * from "./users.schema.js";
+export * from "./refreshTokens.schema.js";
 export * from "./farms.schema.js";
 export * from "./weather.schema.js";
 export * from "./satellite.schema.js";
