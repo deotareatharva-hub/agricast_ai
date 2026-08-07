@@ -6,12 +6,16 @@ import { useFarm } from "../hooks/useFarm";
 import { useUpdateFarm } from "../hooks/useUpdateFarm";
 import FarmForm from "../components/FarmForm";
 import Loading from "../../../components/common/Loading";
+import PageHeader from "../../../components/ui/PageHeader";
+import Card from "../../../components/ui/Card";
+import ErrorState from "../../../components/ui/ErrorState";
+import Breadcrumb from "../../../components/ui/Breadcrumb";
 
 export default function EditFarmPage() {
   const { id } = useParams();
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { data: farm, isLoading, isError, error } = useFarm(id);
+  const { data: farm, isLoading, isError, error, refetch } = useFarm(id);
   const updateFarm = useUpdateFarm();
   const [serverError, setServerError] = useState("");
 
@@ -28,17 +32,23 @@ export default function EditFarmPage() {
 
   return (
     <div className="mx-auto max-w-3xl">
-      <h1 className="text-2xl font-semibold text-neutral-900">{t("farms.editTitle")}</h1>
-      <p className="mt-1 text-sm text-neutral-500">{t("farms.editSubtitle")}</p>
+      <PageHeader
+        title={t("farms.editTitle")}
+        subtitle={t("farms.editSubtitle")}
+        breadcrumb={
+          <Breadcrumb
+            items={[
+              { label: t("farms.title"), to: "/dashboard/farms" },
+              { label: farm?.farmName || t("farms.editTitle") },
+            ]}
+          />
+        }
+      />
 
-      <div className="mt-6 rounded-xl border border-neutral-200 bg-white p-6">
+      <Card className="mt-6" padding="lg">
         {isLoading && <Loading />}
 
-        {isError && (
-          <p className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">
-            {error?.message || t("farms.loadError")}
-          </p>
-        )}
+        {isError && <ErrorState message={error?.message || t("farms.loadError")} onRetry={refetch} />}
 
         {farm && (
           <FarmForm
@@ -49,7 +59,7 @@ export default function EditFarmPage() {
             serverError={serverError}
           />
         )}
-      </div>
+      </Card>
     </div>
   );
 }

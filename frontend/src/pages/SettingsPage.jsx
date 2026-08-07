@@ -1,13 +1,26 @@
 import { useTranslation } from "react-i18next";
+import { motion } from "framer-motion";
+import { Palette, Globe, Ruler, Bell } from "lucide-react";
 import { SUPPORTED_LANGUAGES } from "../i18n";
 import { useSettings } from "../features/settings/useSettings";
+import PageHeader from "../components/ui/PageHeader";
+import Card from "../components/ui/Card";
+import Select from "../components/ui/Select";
+import Badge from "../components/ui/Badge";
 
-function SettingRow({ label, description, children }) {
+function SettingRow({ icon: Icon, label, description, children }) {
   return (
-    <div className="flex flex-wrap items-center justify-between gap-3 border-b border-neutral-100 py-4 last:border-b-0">
-      <div>
-        <div className="text-sm font-medium text-neutral-900">{label}</div>
-        {description && <div className="text-xs text-neutral-500">{description}</div>}
+    <div className="flex flex-wrap items-center justify-between gap-3 border-b border-neutral-900/[0.05] py-4 last:border-b-0">
+      <div className="flex items-start gap-3">
+        {Icon && (
+          <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-neutral-900/[0.04] text-neutral-500">
+            <Icon className="h-4 w-4" aria-hidden="true" />
+          </span>
+        )}
+        <div>
+          <div className="text-sm font-semibold text-neutral-900">{label}</div>
+          {description && <div className="text-xs text-neutral-400">{description}</div>}
+        </div>
       </div>
       {children}
     </div>
@@ -20,52 +33,57 @@ export default function SettingsPage() {
 
   return (
     <div className="mx-auto max-w-2xl">
-      <h1 className="text-2xl font-semibold text-neutral-900">Settings</h1>
-      <p className="mt-1 text-sm text-neutral-500">
-        Preferences for how AgriCast AI looks and behaves on this device.
-      </p>
+      <PageHeader
+        title="Settings"
+        subtitle="Preferences for how AgriCast AI looks and behaves on this device."
+      />
 
-      <div className="mt-6 rounded-xl border border-neutral-200 bg-white px-5">
-        <SettingRow label="Theme" description="Forest green, the AgriCast AI default theme.">
-          <span className="rounded-full bg-brand-50 px-3 py-1 text-xs font-medium text-brand-700">
-            Forest Green
-          </span>
+      <Card className="mt-6" padding="lg">
+        <SettingRow icon={Palette} label="Theme" description="Forest green, the AgriCast AI default theme.">
+          <Badge>Forest Green</Badge>
         </SettingRow>
 
-        <SettingRow label="Language" description="Applies across the whole app immediately.">
-          <select
+        <SettingRow icon={Globe} label="Language" description="Applies across the whole app immediately.">
+          <Select
             value={i18n.resolvedLanguage}
             onChange={(e) => i18n.changeLanguage(e.target.value)}
-            className="focus-ring rounded-md border border-neutral-300 px-3 py-1.5 text-sm"
+            className="w-36"
           >
             {SUPPORTED_LANGUAGES.map((lang) => (
               <option key={lang.code} value={lang.code}>
                 {lang.label}
               </option>
             ))}
-          </select>
+          </Select>
         </SettingRow>
 
-        <SettingRow label="Units" description="Preferred unit system for this device.">
-          <div className="flex overflow-hidden rounded-md border border-neutral-300">
-            {["metric", "imperial"].map((unit) => (
-              <button
-                key={unit}
-                type="button"
-                onClick={() => update({ units: unit })}
-                className={`px-3 py-1.5 text-sm font-medium capitalize ${
-                  settings.units === unit
-                    ? "bg-brand-600 text-white"
-                    : "bg-white text-neutral-700 hover:bg-neutral-50"
-                }`}
-              >
-                {unit}
-              </button>
-            ))}
+        <SettingRow icon={Ruler} label="Units" description="Preferred unit system for this device.">
+          <div className="relative flex rounded-full bg-neutral-900/[0.04] p-1">
+            {["metric", "imperial"].map((unit) => {
+              const isActive = settings.units === unit;
+              return (
+                <button
+                  key={unit}
+                  type="button"
+                  onClick={() => update({ units: unit })}
+                  className="focus-ring relative rounded-full px-3.5 py-1.5 text-sm font-medium capitalize transition-colors"
+                >
+                  {isActive && (
+                    <motion.span
+                      layoutId="units-pill"
+                      className="absolute inset-0 rounded-full bg-gradient-to-b from-brand-500 to-brand-600 shadow-[var(--shadow-glow-brand)]"
+                      transition={{ type: "spring", stiffness: 500, damping: 40 }}
+                    />
+                  )}
+                  <span className={`relative z-10 ${isActive ? "text-white" : "text-neutral-600"}`}>{unit}</span>
+                </button>
+              );
+            })}
           </div>
         </SettingRow>
 
         <SettingRow
+          icon={Bell}
           label="Notifications"
           description="Weather and AI advisory alerts (device-level preference)."
         >
@@ -75,17 +93,19 @@ export default function SettingsPage() {
             aria-checked={settings.notifications}
             onClick={() => update({ notifications: !settings.notifications })}
             className={`focus-ring h-6 w-11 rounded-full transition-colors ${
-              settings.notifications ? "bg-brand-600" : "bg-neutral-300"
+              settings.notifications ? "bg-gradient-to-r from-brand-500 to-brand-600" : "bg-neutral-300"
             }`}
           >
-            <span
-              className={`block h-5 w-5 translate-x-0.5 rounded-full bg-white transition-transform ${
+            <motion.span
+              layout
+              transition={{ type: "spring", stiffness: 500, damping: 32 }}
+              className={`block h-5 w-5 translate-x-0.5 rounded-full bg-white shadow-sm ${
                 settings.notifications ? "translate-x-5" : ""
               }`}
             />
           </button>
         </SettingRow>
-      </div>
+      </Card>
 
       <p className="mt-4 text-xs text-neutral-400">
         Units and notifications are stored on this device only - AgriCast AI's backend doesn't

@@ -14,7 +14,7 @@ const SIZE_CLASSES = {
 export default function Avatar({ name, size = "md", className = "" }) {
   return (
     <span
-      className={`flex shrink-0 items-center justify-center rounded-full bg-brand-100 font-semibold text-brand-700 ${
+      className={`flex shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-brand-400 to-brand-600 font-semibold text-white shadow-inner ${
         SIZE_CLASSES[size] || SIZE_CLASSES.md
       } ${className}`}
       aria-hidden="true"

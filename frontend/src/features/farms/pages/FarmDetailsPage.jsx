@@ -2,17 +2,22 @@ import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
+import { ArrowLeft, Pencil, Trash2 } from "lucide-react";
 import { useFarm } from "../hooks/useFarm";
 import { useDeleteFarm } from "../hooks/useDeleteFarm";
 import LocationPicker from "../components/LocationPicker";
 import ConfirmDialog from "../components/ConfirmDialog";
 import Loading from "../../../components/common/Loading";
+import Card from "../../../components/ui/Card";
+import Badge from "../../../components/ui/Badge";
+import Button from "../../../components/ui/Button";
+import ErrorState from "../../../components/ui/ErrorState";
 
 function DetailRow({ label, value }) {
   return (
-    <div className="flex justify-between gap-4 py-2 text-sm">
+    <div className="flex justify-between gap-4 py-2.5 text-sm">
       <dt className="text-neutral-500">{label}</dt>
-      <dd className="text-right font-medium text-neutral-900">{value}</dd>
+      <dd className="text-right font-medium text-neutral-900">{value || "—"}</dd>
     </div>
   );
 }
@@ -21,7 +26,7 @@ export default function FarmDetailsPage() {
   const { id } = useParams();
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { data: farm, isLoading, isError, error } = useFarm(id);
+  const { data: farm, isLoading, isError, error, refetch } = useFarm(id);
   const deleteFarm = useDeleteFarm();
   const [confirmOpen, setConfirmOpen] = useState(false);
 
@@ -35,52 +40,49 @@ export default function FarmDetailsPage() {
     }
   };
 
-  if (isLoading) {
-    return <Loading />;
-  }
+  if (isLoading) return <Loading />;
 
   if (isError) {
-    return (
-      <p className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">
-        {error?.message || t("farms.loadError")}
-      </p>
-    );
+    return <ErrorState message={error?.message || t("farms.loadError")} onRetry={refetch} />;
   }
 
   if (!farm) return null;
 
   return (
-    <div>
+    <div className="mx-auto max-w-5xl">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <Link
           to="/dashboard/farms"
-          className="focus-ring text-sm font-medium text-brand-700 hover:underline"
+          className="focus-ring inline-flex items-center gap-1.5 text-sm font-semibold text-brand-700 hover:underline"
         >
+          <ArrowLeft className="h-4 w-4" aria-hidden="true" />
           {t("farms.backToList")}
         </Link>
         <div className="flex gap-3">
-          <Link
-            to={`/dashboard/farms/${farm.id}/edit`}
-            className="focus-ring rounded-md border border-neutral-300 px-4 py-2 text-sm font-medium text-neutral-700 hover:bg-neutral-50"
-          >
-            {t("farms.actions.edit")}
+          <Link to={`/dashboard/farms/${farm.id}/edit`} className="focus-ring">
+            <Button variant="outline" size="sm">
+              <Pencil className="h-4 w-4" aria-hidden="true" />
+              {t("farms.actions.edit")}
+            </Button>
           </Link>
-          <button
-            type="button"
-            onClick={() => setConfirmOpen(true)}
-            className="focus-ring rounded-md border border-red-200 px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50"
-          >
+          <Button variant="dangerOutline" size="sm" onClick={() => setConfirmOpen(true)}>
+            <Trash2 className="h-4 w-4" aria-hidden="true" />
             {t("farms.actions.delete")}
-          </button>
+          </Button>
         </div>
       </div>
 
+      <div className="mt-5 flex items-center gap-3">
+        <h1 className="text-2xl font-bold tracking-[-0.01em] text-neutral-900 sm:text-3xl">{farm.farmName}</h1>
+        <Badge>{farm.crop}</Badge>
+      </div>
+
       <div className="mt-6 grid gap-6 sm:grid-cols-2">
-        <div className="rounded-xl border border-neutral-200 bg-white p-5">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-neutral-500">
+        <Card>
+          <h2 className="text-xs font-semibold uppercase tracking-wide text-neutral-400">
             {t("farms.details.overview")}
           </h2>
-          <dl className="mt-2 divide-y divide-neutral-100">
+          <dl className="mt-1 divide-y divide-neutral-100">
             <DetailRow label={t("farms.fields.area")} value={`${farm.area} ${t(`farms.areaUnits.${farm.areaUnit}`)}`} />
             <DetailRow label={t("farms.fields.village")} value={farm.village} />
             <DetailRow label={t("farms.fields.district")} value={farm.district} />
@@ -89,10 +91,10 @@ export default function FarmDetailsPage() {
             <DetailRow label={t("farms.fields.latitude")} value={farm.latitude} />
             <DetailRow label={t("farms.fields.longitude")} value={farm.longitude} />
           </dl>
-        </div>
+        </Card>
 
         <div>
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-neutral-500">
+          <h2 className="text-xs font-semibold uppercase tracking-wide text-neutral-400">
             {t("farms.fields.location")}
           </h2>
           <div className="mt-2">

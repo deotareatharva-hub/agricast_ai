@@ -1,17 +1,16 @@
 @import "tailwindcss";
 
 /*
-  AgriCast AI - Design Tokens
-  Precision-agriculture palette: deep forest green primary, live emerald
-  secondary, and a clean neutral scale for data-dense dashboards.
-
-  2026 auth redesign: shifted the brand scale from the original muted
-  earthy green toward a more saturated forest-to-emerald range so the
-  primary/secondary read as "satellite-grade instrumentation" rather than
-  "farmhouse sign". Same token names everywhere else in the app, so this
-  refresh applies site-wide, not just to the auth pages.
+  AgriCast AI - Design Tokens (Premium SaaS refresh)
+  ----------------------------------------------------
+  Same token names used everywhere pre-refresh are kept (brand-*, accent-*,
+  soil-*, sky-alert-*, warn-*, danger-*) so no component broke when this
+  file changed. New tokens are additive: a wider surface/glass/shadow/radius
+  system so the whole authenticated app can read as one considered product
+  instead of a stack of CRUD screens.
 */
 @theme {
+  /* Brand - deep forest -> live emerald */
   --color-brand-50: #f0fdf4;
   --color-brand-100: #dcfce7;
   --color-brand-200: #bbf7d0;
@@ -24,13 +23,37 @@
   --color-brand-900: #0f3d22;
   --color-brand-950: #082614;
 
-  /* Sparingly-used highlight accent (badges, focus glow, chart AI markers) */
+  /* Accent highlight (badges, focus glow, AI markers) */
   --color-accent-100: #ecfccb;
   --color-accent-200: #d9f99d;
   --color-accent-300: #bef264;
   --color-accent-400: #a3e635;
   --color-accent-500: #84cc16;
   --color-accent-600: #65a30d;
+
+  /* Amber / Orange - warmth, alerts, highlights */
+  --color-amber-50: #fffbeb;
+  --color-amber-100: #fef3c7;
+  --color-amber-200: #fde68a;
+  --color-amber-300: #fcd34d;
+  --color-amber-400: #fbbf24;
+  --color-amber-500: #f59e0b;
+  --color-amber-600: #d97706;
+
+  --color-orange-50: #fff7ed;
+  --color-orange-100: #ffedd5;
+  --color-orange-200: #fed7aa;
+  --color-orange-400: #fb923c;
+  --color-orange-500: #f97316;
+  --color-orange-600: #ea580c;
+
+  /* Info blue */
+  --color-info-50: #eff6ff;
+  --color-info-100: #dbeafe;
+  --color-info-200: #bfdbfe;
+  --color-info-400: #60a5fa;
+  --color-info-500: #3b82f6;
+  --color-info-600: #2563eb;
 
   --color-soil-500: #b8763e;
   --color-soil-600: #96602f;
@@ -39,14 +62,30 @@
   --color-warn-500: #d9a441;
   --color-danger-500: #c0453a;
 
+  /* Neutral surface scale used for glass/elevated panels */
+  --color-surface-0: #ffffff;
+  --color-surface-1: #fbfcfe;
+  --color-surface-2: #f6f8fb;
+  --color-surface-3: #eef1f6;
+
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Space Grotesk", "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", monospace;
+
+  /* Radius scale - premium = generous, rounded corners */
+  --radius-xl: 1.25rem;
+  --radius-2xl: 1.5rem;
+  --radius-3xl: 1.75rem;
+
+  /* Elevation - soft, colored shadows instead of flat grey */
+  --shadow-soft-sm: 0 1px 2px 0 rgb(15 61 34 / 0.04), 0 1px 3px 0 rgb(15 61 34 / 0.06);
+  --shadow-soft-md: 0 4px 16px -4px rgb(15 61 34 / 0.10), 0 2px 6px -2px rgb(15 61 34 / 0.06);
+  --shadow-soft-lg: 0 12px 32px -8px rgb(15 61 34 / 0.14), 0 4px 12px -4px rgb(15 61 34 / 0.08);
+  --shadow-soft-xl: 0 24px 60px -12px rgb(15 61 34 / 0.20), 0 8px 20px -6px rgb(15 61 34 / 0.10);
+  --shadow-glow-brand: 0 0 0 1px rgb(34 197 94 / 0.12), 0 8px 24px -6px rgb(34 197 94 / 0.35);
 }
 
-/* Class-based dark mode (opt-in per screen; the rest of the app has no
-   dark styles yet, so this only takes visible effect where dark: utilities
-   are actually used, i.e. the auth pages). */
+/* Class-based dark mode (opt-in per screen). */
 @custom-variant dark (&:where(.dark, .dark *));
 
 html,
@@ -56,10 +95,77 @@ body,
 }
 
 body {
-  @apply bg-neutral-50 text-neutral-900 antialiased;
+  @apply text-neutral-900 antialiased;
   font-family: var(--font-sans);
+  background:
+    radial-gradient(1200px 600px at 100% -10%, rgb(34 197 94 / 0.06), transparent 60%),
+    radial-gradient(900px 500px at -10% 0%, rgb(59 130 246 / 0.05), transparent 55%),
+    var(--color-surface-2);
+  background-attachment: fixed;
 }
 
 .focus-ring {
   @apply outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2;
+}
+
+/* ---- Premium surface utilities (design system primitives build on these) ---- */
+
+.surface-card {
+  background: var(--color-surface-0);
+  border: 1px solid rgb(15 61 34 / 0.07);
+  box-shadow: var(--shadow-soft-sm);
+}
+
+.surface-glass {
+  background: rgb(255 255 255 / 0.72);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  border: 1px solid rgb(255 255 255 / 0.6);
+}
+
+.surface-glass-dark {
+  background: rgb(15 61 34 / 0.55);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  border: 1px solid rgb(255 255 255 / 0.1);
+}
+
+.text-gradient-brand {
+  background: linear-gradient(120deg, var(--color-brand-700), var(--color-brand-500) 55%, var(--color-accent-500));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.bg-gradient-hero {
+  background: linear-gradient(135deg, var(--color-brand-800) 0%, var(--color-brand-600) 48%, #0d9467 100%);
+}
+
+.bg-noise-overlay {
+  background-image: radial-gradient(rgb(255 255 255 / 0.08) 1px, transparent 1px);
+  background-size: 18px 18px;
+}
+
+/* Thin, unobtrusive scrollbars for dense panels (satellite timeline, tables) */
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(15 61 34 / 0.2) transparent;
+}
+.scrollbar-thin::-webkit-scrollbar {
+  height: 6px;
+  width: 6px;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background-color: rgb(15 61 34 / 0.2);
+  border-radius: 999px;
+}
+
+@keyframes shimmer {
+  0% { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+.animate-shimmer {
+  background: linear-gradient(90deg, var(--color-surface-3) 0%, #e6ebf2 50%, var(--color-surface-3) 100%);
+  background-size: 800px 100%;
+  animation: shimmer 1.6s linear infinite;
 }

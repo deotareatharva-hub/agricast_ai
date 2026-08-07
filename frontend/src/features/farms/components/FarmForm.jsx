@@ -2,6 +2,10 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { getFarmValidationRules, AREA_UNITS } from "../validation/farmSchema";
 import LocationPicker from "./LocationPicker";
+import Field from "../../../components/ui/Field";
+import Input from "../../../components/ui/Input";
+import Select from "../../../components/ui/Select";
+import Button from "../../../components/ui/Button";
 
 const DEFAULT_VALUES = {
   farmName: "",
@@ -16,13 +20,10 @@ const DEFAULT_VALUES = {
   country: "",
 };
 
-function FieldError({ error }) {
-  if (!error) return null;
-  return <p className="mt-1 text-xs text-red-600">{error.message}</p>;
-}
-
 // Shared form for both "Add Farm" and "Edit Farm" pages. The caller owns
-// the mutation (create vs update) and passes it in as onSubmit.
+// the mutation (create vs update) and passes it in as onSubmit. Field
+// names, validation rules, and submit contract are unchanged from before
+// this redesign - only the rendered controls (Field/Input/Select) are new.
 export default function FarmForm({
   defaultValues,
   onSubmit,
@@ -52,170 +53,71 @@ export default function FarmForm({
   };
 
   return (
-    <form className="space-y-6" onSubmit={handleSubmit(onSubmit)} noValidate>
+    <form className="space-y-7" onSubmit={handleSubmit(onSubmit)} noValidate>
       {serverError && (
-        <div className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700" role="alert">
+        <div className="rounded-xl border border-red-100 bg-red-50/80 px-4 py-3 text-sm font-medium text-red-700" role="alert">
           {serverError}
         </div>
       )}
 
-      <div className="grid gap-4 sm:grid-cols-2">
-        <div>
-          <label htmlFor="farmName" className="block text-sm font-medium text-neutral-700">
-            {t("farms.fields.farmName")}
-          </label>
-          <input
-            id="farmName"
-            type="text"
-            className="focus-ring mt-1 block w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
-            {...register("farmName", rules.farmName)}
-          />
-          <FieldError error={errors.farmName} />
-        </div>
+      <div className="grid gap-5 sm:grid-cols-2">
+        <Field label={t("farms.fields.farmName")} htmlFor="farmName" error={errors.farmName}>
+          <Input id="farmName" type="text" invalid={!!errors.farmName} {...register("farmName", rules.farmName)} />
+        </Field>
 
-        <div>
-          <label htmlFor="crop" className="block text-sm font-medium text-neutral-700">
-            {t("farms.fields.crop")}
-          </label>
-          <input
-            id="crop"
-            type="text"
-            className="focus-ring mt-1 block w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
-            {...register("crop", rules.crop)}
-          />
-          <FieldError error={errors.crop} />
-        </div>
+        <Field label={t("farms.fields.crop")} htmlFor="crop" error={errors.crop}>
+          <Input id="crop" type="text" invalid={!!errors.crop} {...register("crop", rules.crop)} />
+        </Field>
 
-        <div>
-          <label htmlFor="area" className="block text-sm font-medium text-neutral-700">
-            {t("farms.fields.area")}
-          </label>
-          <div className="mt-1 flex gap-2">
-            <input
-              id="area"
-              type="number"
-              step="0.01"
-              className="focus-ring block w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
-              {...register("area", rules.area)}
-            />
-            <select
-              className="focus-ring rounded-md border border-neutral-300 px-2 py-2 text-sm"
-              {...register("areaUnit")}
-            >
+        <Field label={t("farms.fields.area")} htmlFor="area" error={errors.area}>
+          <div className="flex gap-2">
+            <Input id="area" type="number" step="0.01" invalid={!!errors.area} {...register("area", rules.area)} />
+            <Select className="w-36 shrink-0" {...register("areaUnit")}>
               {AREA_UNITS.map((unit) => (
                 <option key={unit} value={unit}>
                   {t(`farms.areaUnits.${unit}`)}
                 </option>
               ))}
-            </select>
+            </Select>
           </div>
-          <FieldError error={errors.area} />
-        </div>
+        </Field>
 
-        <div className="grid grid-cols-2 gap-2">
-          <div>
-            <label htmlFor="latitude" className="block text-sm font-medium text-neutral-700">
-              {t("farms.fields.latitude")}
-            </label>
-            <input
-              id="latitude"
-              type="number"
-              step="0.000001"
-              className="focus-ring mt-1 block w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
-              {...register("latitude", rules.latitude)}
-            />
-            <FieldError error={errors.latitude} />
-          </div>
-          <div>
-            <label htmlFor="longitude" className="block text-sm font-medium text-neutral-700">
-              {t("farms.fields.longitude")}
-            </label>
-            <input
-              id="longitude"
-              type="number"
-              step="0.000001"
-              className="focus-ring mt-1 block w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
-              {...register("longitude", rules.longitude)}
-            />
-            <FieldError error={errors.longitude} />
-          </div>
+        <div className="grid grid-cols-2 gap-3">
+          <Field label={t("farms.fields.latitude")} htmlFor="latitude" error={errors.latitude}>
+            <Input id="latitude" type="number" step="0.000001" invalid={!!errors.latitude} {...register("latitude", rules.latitude)} />
+          </Field>
+          <Field label={t("farms.fields.longitude")} htmlFor="longitude" error={errors.longitude}>
+            <Input id="longitude" type="number" step="0.000001" invalid={!!errors.longitude} {...register("longitude", rules.longitude)} />
+          </Field>
         </div>
       </div>
 
-      <div>
-        <span className="block text-sm font-medium text-neutral-700">
-          {t("farms.fields.location")}
-        </span>
-        <div className="mt-1">
-          <LocationPicker
-            latitude={typeof latitude === "number" ? latitude : Number(latitude)}
-            longitude={typeof longitude === "number" ? longitude : Number(longitude)}
-            onChange={handleMapChange}
-          />
-        </div>
+      <Field label={t("farms.fields.location")}>
+        <LocationPicker
+          latitude={typeof latitude === "number" ? latitude : Number(latitude)}
+          longitude={typeof longitude === "number" ? longitude : Number(longitude)}
+          onChange={handleMapChange}
+        />
+      </Field>
+
+      <div className="grid gap-5 sm:grid-cols-2">
+        <Field label={t("farms.fields.village")} htmlFor="village" error={errors.village}>
+          <Input id="village" type="text" invalid={!!errors.village} {...register("village", rules.village)} />
+        </Field>
+        <Field label={t("farms.fields.district")} htmlFor="district" error={errors.district}>
+          <Input id="district" type="text" invalid={!!errors.district} {...register("district", rules.district)} />
+        </Field>
+        <Field label={t("farms.fields.state")} htmlFor="state" error={errors.state}>
+          <Input id="state" type="text" invalid={!!errors.state} {...register("state", rules.state)} />
+        </Field>
+        <Field label={t("farms.fields.country")} htmlFor="country" error={errors.country}>
+          <Input id="country" type="text" invalid={!!errors.country} {...register("country", rules.country)} />
+        </Field>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2">
-        <div>
-          <label htmlFor="village" className="block text-sm font-medium text-neutral-700">
-            {t("farms.fields.village")}
-          </label>
-          <input
-            id="village"
-            type="text"
-            className="focus-ring mt-1 block w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
-            {...register("village", rules.village)}
-          />
-          <FieldError error={errors.village} />
-        </div>
-
-        <div>
-          <label htmlFor="district" className="block text-sm font-medium text-neutral-700">
-            {t("farms.fields.district")}
-          </label>
-          <input
-            id="district"
-            type="text"
-            className="focus-ring mt-1 block w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
-            {...register("district", rules.district)}
-          />
-          <FieldError error={errors.district} />
-        </div>
-
-        <div>
-          <label htmlFor="state" className="block text-sm font-medium text-neutral-700">
-            {t("farms.fields.state")}
-          </label>
-          <input
-            id="state"
-            type="text"
-            className="focus-ring mt-1 block w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
-            {...register("state", rules.state)}
-          />
-          <FieldError error={errors.state} />
-        </div>
-
-        <div>
-          <label htmlFor="country" className="block text-sm font-medium text-neutral-700">
-            {t("farms.fields.country")}
-          </label>
-          <input
-            id="country"
-            type="text"
-            className="focus-ring mt-1 block w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
-            {...register("country", rules.country)}
-          />
-          <FieldError error={errors.country} />
-        </div>
-      </div>
-
-      <button
-        type="submit"
-        disabled={isSubmitting}
-        className="focus-ring w-full rounded-md bg-brand-600 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-700 disabled:opacity-60 sm:w-auto"
-      >
+      <Button type="submit" isLoading={isSubmitting} className="sm:w-auto" fullWidth>
         {isSubmitting ? t("farms.saving") : submitLabel}
-      </button>
+      </Button>
     </form>
   );
 }

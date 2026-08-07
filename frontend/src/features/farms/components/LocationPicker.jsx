@@ -40,7 +40,7 @@ export default function LocationPicker({ latitude, longitude, onChange }) {
   const center = useMemo(() => position || DEFAULT_CENTER, [position]);
 
   return (
-    <div className="overflow-hidden rounded-md border border-neutral-300">
+    <div className="overflow-hidden rounded-2xl border border-neutral-900/[0.08] shadow-[var(--shadow-soft-sm)]">
       <MapContainer
         center={center}
         zoom={hasPosition ? SELECTED_ZOOM : DEFAULT_ZOOM}
@@ -65,7 +65,7 @@ export default function LocationPicker({ latitude, longitude, onChange }) {
           />
         )}
       </MapContainer>
-      <p className="border-t border-neutral-200 bg-neutral-50 px-3 py-2 text-xs text-neutral-500">
+      <p className="border-t border-neutral-900/[0.06] bg-neutral-50/80 px-3.5 py-2.5 text-xs text-neutral-500">
         {t("farms.mapHint")}
       </p>
     </div>

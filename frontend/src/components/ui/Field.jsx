@@ -1,7 +1,6 @@
-// Every text field across LoginPage, RegisterPage and FarmForm repeated the
-// same "label -> control -> error paragraph" block by hand (see
-// FrontendAudit.md - "Duplicate Code"). Field owns that structure; callers
-// just pass the control (Input/Select/Textarea) as children.
+// Every text field across the app repeats the same "label -> control ->
+// error paragraph" block. Field owns that structure; callers just pass the
+// control (Input/Select/Textarea) as children.
 export default function Field({ label, htmlFor, error, hint, className = "", children }) {
   return (
     <div className={className}>
@@ -10,11 +9,11 @@ export default function Field({ label, htmlFor, error, hint, className = "", chi
           {label}
         </label>
       )}
-      <div className={label ? "mt-1" : undefined}>{children}</div>
+      <div className={label ? "mt-1.5" : undefined}>{children}</div>
       {error ? (
-        <p className="mt-1 text-xs text-red-600">{error.message}</p>
+        <p className="mt-1.5 text-xs font-medium text-red-600">{error.message}</p>
       ) : (
-        hint && <p className="mt-1 text-xs text-neutral-400">{hint}</p>
+        hint && <p className="mt-1.5 text-xs text-neutral-400">{hint}</p>
       )}
     </div>
   );

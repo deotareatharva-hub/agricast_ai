@@ -1,3 +1,8 @@
+import { motion } from "framer-motion";
+import { Download, Trash2 } from "lucide-react";
+import Badge from "../../../components/ui/Badge";
+import Button from "../../../components/ui/Button";
+
 const TYPE_LABELS = {
   today: "Today",
   weekly: "Weekly",
@@ -7,15 +12,18 @@ const TYPE_LABELS = {
 
 export default function ReportCard({ report, onDownload, onDelete, isDownloading, isDeleting }) {
   return (
-    <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-neutral-200 bg-white px-4 py-3">
+    <motion.div
+      initial={{ opacity: 0, y: 6 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.25 }}
+      className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-neutral-900/[0.06] bg-white px-4 py-3.5 shadow-[var(--shadow-soft-sm)]"
+    >
       <div>
         <div className="flex items-center gap-2">
-          <span className="rounded-full bg-brand-50 px-2 py-0.5 text-xs font-semibold text-brand-700">
-            {TYPE_LABELS[report.reportType] || report.reportType}
-          </span>
-          <span className="text-xs uppercase text-neutral-400">{report.fileType}</span>
+          <Badge>{TYPE_LABELS[report.reportType] || report.reportType}</Badge>
+          <span className="text-xs font-semibold uppercase text-neutral-400">{report.fileType}</span>
         </div>
-        <p className="mt-1 text-xs text-neutral-500">
+        <p className="mt-1.5 text-xs text-neutral-400">
           Generated {new Date(report.generatedAt || report.createdAt).toLocaleString([], {
             dateStyle: "medium",
             timeStyle: "short",
@@ -24,23 +32,15 @@ export default function ReportCard({ report, onDownload, onDelete, isDownloading
       </div>
 
       <div className="flex shrink-0 gap-2">
-        <button
-          type="button"
-          onClick={onDownload}
-          disabled={isDownloading}
-          className="focus-ring rounded-md border border-neutral-300 px-3 py-1.5 text-sm font-medium text-neutral-700 hover:bg-neutral-50 disabled:opacity-60"
-        >
+        <Button variant="outline" size="sm" onClick={onDownload} isLoading={isDownloading}>
+          <Download className="h-3.5 w-3.5" aria-hidden="true" />
           {isDownloading ? "Downloading…" : "Download"}
-        </button>
-        <button
-          type="button"
-          onClick={onDelete}
-          disabled={isDeleting}
-          className="focus-ring rounded-md border border-red-200 px-3 py-1.5 text-sm font-medium text-red-600 hover:bg-red-50 disabled:opacity-60"
-        >
+        </Button>
+        <Button variant="dangerOutline" size="sm" onClick={onDelete} isLoading={isDeleting}>
+          <Trash2 className="h-3.5 w-3.5" aria-hidden="true" />
           Delete
-        </button>
+        </Button>
       </div>
-    </div>
+    </motion.div>
   );
 }

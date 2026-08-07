@@ -1,28 +1,32 @@
 import { forwardRef } from "react";
 
 // Every button/CTA in the app (whether it's a real <button> or a styled
-// <Link>) was hand-writing its own Tailwind string before this refactor -
-// see FrontendAudit.md. This is the single source of truth for those
-// classes now: components/ui/Button for real buttons, and buttonClasses()
-// for anywhere a <Link> needs to look like one (e.g. "Add Farm").
+// <Link>) reads its classes from here - components/ui/Button for real
+// buttons, and buttonClasses() for anywhere a <Link> needs to look like one.
+// Props/behavior unchanged in this redesign; only the visual language did.
 const VARIANT_CLASSES = {
-  primary: "bg-brand-600 text-white hover:bg-brand-700",
-  secondary: "bg-neutral-100 text-neutral-700 hover:bg-neutral-200",
-  outline: "border border-neutral-300 text-neutral-700 hover:bg-neutral-50",
-  danger: "bg-red-600 text-white hover:bg-red-700",
-  dangerOutline: "border border-red-200 text-red-600 hover:bg-red-50",
-  ghost: "text-neutral-700 hover:text-brand-700",
+  primary:
+    "bg-gradient-to-b from-brand-500 to-brand-600 text-white shadow-[0_1px_0_0_rgb(255_255_255/0.15)_inset,0_6px_16px_-4px_rgb(22_163_74/0.45)] hover:from-brand-600 hover:to-brand-700 hover:shadow-[0_1px_0_0_rgb(255_255_255/0.15)_inset,0_8px_20px_-4px_rgb(22_163_74/0.55)] active:scale-[0.98]",
+  secondary:
+    "bg-neutral-900/[0.04] text-neutral-700 hover:bg-neutral-900/[0.07] active:scale-[0.98]",
+  outline:
+    "border border-neutral-200 bg-white/60 text-neutral-700 backdrop-blur hover:border-brand-300 hover:bg-white hover:text-brand-700 active:scale-[0.98]",
+  danger:
+    "bg-gradient-to-b from-red-500 to-red-600 text-white shadow-[0_1px_0_0_rgb(255_255_255/0.15)_inset,0_6px_16px_-4px_rgb(220_38_38/0.45)] hover:from-red-600 hover:to-red-700 active:scale-[0.98]",
+  dangerOutline:
+    "border border-red-200 text-red-600 hover:bg-red-50 active:scale-[0.98]",
+  ghost: "text-neutral-600 hover:bg-neutral-900/[0.05] hover:text-brand-700 active:scale-[0.98]",
 };
 
 const SIZE_CLASSES = {
-  sm: "px-3 py-1.5 text-sm",
-  md: "px-4 py-2 text-sm",
-  lg: "px-5 py-3 text-sm",
+  sm: "px-3.5 py-1.5 text-sm",
+  md: "px-4.5 py-2.5 text-sm",
+  lg: "px-6 py-3 text-[15px]",
 };
 
 export function buttonClasses({ variant = "primary", size = "md", fullWidth = false, className = "" } = {}) {
   return [
-    "focus-ring inline-flex items-center justify-center gap-2 rounded-md font-semibold transition disabled:cursor-not-allowed disabled:opacity-60",
+    "focus-ring inline-flex items-center justify-center gap-2 rounded-full font-semibold tracking-[-0.01em] transition-all duration-200 ease-out disabled:cursor-not-allowed disabled:opacity-60 disabled:active:scale-100",
     VARIANT_CLASSES[variant] || VARIANT_CLASSES.primary,
     SIZE_CLASSES[size] || SIZE_CLASSES.md,
     fullWidth ? "w-full" : "w-fit",

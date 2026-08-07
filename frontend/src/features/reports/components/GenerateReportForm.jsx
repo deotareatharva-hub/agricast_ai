@@ -1,4 +1,8 @@
 import { useState } from "react";
+import { FileDown } from "lucide-react";
+import Select from "../../../components/ui/Select";
+import Button from "../../../components/ui/Button";
+import Card from "../../../components/ui/Card";
 
 const REPORT_TYPES = [
   { id: "today", label: "Today" },
@@ -18,47 +22,35 @@ export default function GenerateReportForm({ onGenerate, isPending }) {
   const [fileType, setFileType] = useState("pdf");
 
   return (
-    <div className="rounded-xl border border-neutral-200 bg-white p-4">
+    <Card>
       <div className="flex flex-wrap items-end gap-4">
         <div>
-          <label className="mb-1 block text-xs font-medium text-neutral-500">Report type</label>
-          <select
-            value={reportType}
-            onChange={(e) => setReportType(e.target.value)}
-            className="focus-ring rounded-md border border-neutral-300 px-3 py-2 text-sm"
-          >
+          <label className="mb-1.5 block text-xs font-semibold text-neutral-500">Report type</label>
+          <Select value={reportType} onChange={(e) => setReportType(e.target.value)} className="w-40">
             {REPORT_TYPES.map((t) => (
               <option key={t.id} value={t.id}>
                 {t.label}
               </option>
             ))}
-          </select>
+          </Select>
         </div>
 
         <div>
-          <label className="mb-1 block text-xs font-medium text-neutral-500">Format</label>
-          <select
-            value={fileType}
-            onChange={(e) => setFileType(e.target.value)}
-            className="focus-ring rounded-md border border-neutral-300 px-3 py-2 text-sm"
-          >
+          <label className="mb-1.5 block text-xs font-semibold text-neutral-500">Format</label>
+          <Select value={fileType} onChange={(e) => setFileType(e.target.value)} className="w-32">
             {FILE_TYPES.map((f) => (
               <option key={f.id} value={f.id}>
                 {f.label}
               </option>
             ))}
-          </select>
+          </Select>
         </div>
 
-        <button
-          type="button"
-          onClick={() => onGenerate({ reportType, fileType })}
-          disabled={isPending}
-          className="focus-ring ml-auto rounded-md bg-brand-600 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-700 disabled:opacity-60"
-        >
+        <Button className="ml-auto" onClick={() => onGenerate({ reportType, fileType })} isLoading={isPending}>
+          <FileDown className="h-4 w-4" aria-hidden="true" />
           {isPending ? "Generating…" : "Generate report"}
-        </button>
+        </Button>
       </div>
-    </div>
+    </Card>
   );
 }

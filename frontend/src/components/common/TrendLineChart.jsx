@@ -11,7 +11,7 @@ import { Line } from "react-chartjs-2";
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend);
 
-const COLORS = ["#2c6838", "#b8763e", "#2f7ec9", "#d9a441"];
+const COLORS = ["#16a34a", "#f59e0b", "#3b82f6", "#f97316"];
 
 // Generic line chart: `labels` on the x-axis, `series` is an array of
 // { label, data } lines. Kept deliberately simple - one chart component

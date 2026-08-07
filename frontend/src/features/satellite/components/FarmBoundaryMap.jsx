@@ -19,12 +19,12 @@ export default function FarmBoundaryMap({ latitude, longitude }) {
   const position = [latitude, longitude];
 
   return (
-    <div className="overflow-hidden rounded-xl border border-neutral-200">
+    <div className="overflow-hidden rounded-2xl border border-neutral-900/[0.08] shadow-[var(--shadow-soft-md)]">
       <MapContainer
         center={position}
         zoom={15}
         scrollWheelZoom={false}
-        style={{ height: "260px", width: "100%" }}
+        style={{ height: "280px", width: "100%" }}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

@@ -1,4 +1,5 @@
 import { useOutletContext } from "react-router-dom";
+import { motion } from "framer-motion";
 import { useCurrentWeather } from "../hooks/useCurrentWeather";
 import { useHourlyWeather } from "../hooks/useHourlyWeather";
 import { useDailyWeather } from "../hooks/useDailyWeather";
@@ -10,15 +11,20 @@ import WeatherAlerts from "../components/WeatherAlerts";
 import WeatherSkeleton from "../components/WeatherSkeleton";
 import ErrorState from "../../../components/common/ErrorState";
 import TrendLineChart from "../../../components/common/TrendLineChart";
+import Card from "../../../components/ui/Card";
 
 function Section({ title, children }) {
   return (
-    <section>
-      <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-neutral-500">
+    <motion.section
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+    >
+      <h2 className="mb-3 text-xs font-bold uppercase tracking-wider text-neutral-400">
         {title}
       </h2>
       {children}
-    </section>
+    </motion.section>
   );
 }
 
@@ -74,11 +80,11 @@ export default function WeatherPage() {
 
       <Section title="Recent trend">
         {historyQuery.isLoading ? (
-          <p className="text-sm text-neutral-500">Loading history…</p>
+          <p className="text-sm text-neutral-400">Loading history…</p>
         ) : historyQuery.isError || !history.length ? (
-          <p className="text-sm text-neutral-500">No recent history available yet.</p>
+          <p className="text-sm text-neutral-400">No recent history available yet.</p>
         ) : (
-          <div className="rounded-xl border border-neutral-200 bg-white p-4">
+          <Card>
             <TrendLineChart
               labels={history.map((h) =>
                 new Date(h.time || h.date).toLocaleDateString([], {
@@ -91,7 +97,7 @@ export default function WeatherPage() {
               ]}
               unit="°C"
             />
-          </div>
+          </Card>
         )}
       </Section>
     </div>

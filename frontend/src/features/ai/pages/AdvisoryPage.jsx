@@ -1,6 +1,8 @@
 import { useOutletContext } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
+import { motion } from "framer-motion";
+import { Sparkles } from "lucide-react";
 import { useLatestRecommendation } from "../hooks/useLatestRecommendation";
 import { useRecommendationHistory } from "../hooks/useRecommendationHistory";
 import { useGenerateRecommendation } from "../hooks/useGenerateRecommendation";
@@ -8,6 +10,8 @@ import RecommendationCard from "../components/RecommendationCard";
 import RecommendationHistoryList from "../components/RecommendationHistoryList";
 import Loading from "../../../components/common/Loading";
 import ErrorState from "../../../components/common/ErrorState";
+import Button from "../../../components/ui/Button";
+import EmptyState from "../../../components/ui/EmptyState";
 
 export default function AdvisoryPage() {
   const { farm } = useOutletContext();
@@ -29,17 +33,11 @@ export default function AdvisoryPage() {
   return (
     <div className="space-y-8">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-neutral-500">
-          AI Advisory
-        </h2>
-        <button
-          type="button"
-          onClick={handleGenerate}
-          disabled={generate.isPending}
-          className="focus-ring rounded-md bg-brand-600 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-700 disabled:opacity-60"
-        >
+        <h2 className="text-xs font-bold uppercase tracking-wider text-neutral-400">AI Advisory</h2>
+        <Button onClick={handleGenerate} isLoading={generate.isPending}>
+          <Sparkles className="h-4 w-4" aria-hidden="true" />
           {generate.isPending ? "Generating…" : "Generate new recommendation"}
-        </button>
+        </Button>
       </div>
 
       {latestQuery.isLoading ? (
@@ -52,27 +50,36 @@ export default function AdvisoryPage() {
       ) : latestQuery.data ? (
         <RecommendationCard recommendation={latestQuery.data} />
       ) : (
-        <div className="rounded-xl border border-dashed border-neutral-300 bg-white px-6 py-12 text-center">
-          <p className="text-sm text-neutral-500">
-            No recommendation yet for this farm. Generate the first one above.
-          </p>
-        </div>
+        <EmptyState
+          icon={Sparkles}
+          title="No recommendation yet"
+          description="Generate the first AI recommendation for this farm above."
+        />
       )}
 
       {generate.isPending && (
-        <div className="rounded-xl border border-brand-100 bg-brand-50 px-4 py-3 text-sm text-brand-700">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="flex items-center gap-2.5 rounded-2xl border border-brand-100 bg-brand-50/70 px-4 py-3.5 text-sm font-medium text-brand-700"
+        >
+          <motion.span
+            animate={{ rotate: 360 }}
+            transition={{ repeat: Infinity, duration: 1.2, ease: "linear" }}
+            className="flex h-4 w-4 items-center justify-center"
+          >
+            <Sparkles className="h-4 w-4" aria-hidden="true" />
+          </motion.span>
           Analyzing weather, satellite, and sensor data for this farm…
-        </div>
+        </motion.div>
       )}
 
       <div>
-        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-neutral-500">
-          History
-        </h2>
+        <h2 className="mb-3 text-xs font-bold uppercase tracking-wider text-neutral-400">History</h2>
         {historyQuery.isLoading ? (
-          <p className="text-sm text-neutral-500">Loading history…</p>
+          <p className="text-sm text-neutral-400">Loading history…</p>
         ) : historyQuery.isError ? (
-          <p className="text-sm text-neutral-500">Could not load recommendation history.</p>
+          <p className="text-sm text-neutral-400">Could not load recommendation history.</p>
         ) : (
           <RecommendationHistoryList history={historyQuery.data} />
         )}

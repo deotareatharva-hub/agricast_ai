@@ -1,4 +1,5 @@
 import { useOutletContext } from "react-router-dom";
+import { motion } from "framer-motion";
 import { useDashboardAnalytics } from "../hooks/useDashboardAnalytics";
 import { useWeatherAnalytics } from "../hooks/useWeatherAnalytics";
 import { useRecommendationAnalytics } from "../hooks/useRecommendationAnalytics";
@@ -7,15 +8,14 @@ import { extractSeries, trendLabels, hasMetric } from "../lib/extractSeries";
 import Loading from "../../../components/common/Loading";
 import ErrorState from "../../../components/common/ErrorState";
 import TrendLineChart from "../../../components/common/TrendLineChart";
+import Card from "../../../components/ui/Card";
 
 function Section({ title, children }) {
   return (
-    <section>
-      <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-neutral-500">
-        {title}
-      </h2>
+    <motion.section initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
+      <h2 className="mb-3 text-xs font-bold uppercase tracking-wider text-neutral-400">{title}</h2>
       {children}
-    </section>
+    </motion.section>
   );
 }
 
@@ -63,7 +63,7 @@ export default function AnalyticsPage() {
 
       <Section title="Weather trends">
         {weatherTrends.length ? (
-          <div className="rounded-xl border border-neutral-200 bg-white p-4">
+          <Card>
             <TrendLineChart
               labels={trendLabels(weatherTrends)}
               series={[
@@ -79,25 +79,25 @@ export default function AnalyticsPage() {
                   : []),
               ]}
             />
-          </div>
+          </Card>
         ) : (
-          <p className="text-sm text-neutral-500">Not enough data yet to chart a trend.</p>
+          <p className="text-sm text-neutral-400">Not enough data yet to chart a trend.</p>
         )}
       </Section>
 
       <Section title="Recommendation confidence">
         {recQuery.isLoading ? (
-          <p className="text-sm text-neutral-500">Loading…</p>
+          <p className="text-sm text-neutral-400">Loading…</p>
         ) : recTrends.length ? (
-          <div className="rounded-xl border border-neutral-200 bg-white p-4">
+          <Card>
             <TrendLineChart
               labels={trendLabels(recTrends)}
               series={[{ label: "Confidence (%)", data: extractSeries(recTrends, "confidence") }]}
               unit="%"
             />
-          </div>
+          </Card>
         ) : (
-          <p className="text-sm text-neutral-500">
+          <p className="text-sm text-neutral-400">
             No AI recommendations yet to build a confidence trend.
           </p>
         )}
@@ -105,16 +105,16 @@ export default function AnalyticsPage() {
 
       <Section title="Recent AI recommendations">
         {dashboard?.recentRecommendations?.length ? (
-          <div className="divide-y divide-neutral-100 rounded-xl border border-neutral-200 bg-white">
+          <div className="divide-y divide-neutral-900/[0.05] overflow-hidden rounded-2xl border border-neutral-900/[0.06] bg-white shadow-[var(--shadow-soft-sm)]">
             {dashboard.recentRecommendations.map((rec) => (
-              <div key={rec.id} className="flex items-center justify-between gap-4 px-4 py-3">
+              <div key={rec.id} className="flex items-center justify-between gap-4 px-4 py-3.5 transition hover:bg-neutral-900/[0.02]">
                 <p className="text-sm text-neutral-800">{rec.summary}</p>
-                <span className="shrink-0 text-xs text-neutral-500">{rec.confidence}%</span>
+                <span className="shrink-0 text-xs font-semibold text-neutral-400">{rec.confidence}%</span>
               </div>
             ))}
           </div>
         ) : (
-          <p className="text-sm text-neutral-500">No recommendations yet.</p>
+          <p className="text-sm text-neutral-400">No recommendations yet.</p>
         )}
       </Section>
     </div>

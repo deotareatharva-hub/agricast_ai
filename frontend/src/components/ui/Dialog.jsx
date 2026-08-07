@@ -2,9 +2,6 @@ import { useTranslation } from "react-i18next";
 import Modal from "./Modal";
 import Button from "./Button";
 
-// Same job as the old features/farms/components/ConfirmDialog.jsx, moved
-// into the shared design system since delete/confirm flows aren't
-// farm-specific (Weather alerts, Reports, etc. will need the same thing).
 export default function Dialog({
   open,
   onClose,

@@ -1,5 +1,6 @@
 import { useOutletContext } from "react-router-dom";
 import { toast } from "react-toastify";
+import { FileText } from "lucide-react";
 import { useReports } from "../hooks/useReports";
 import { useGenerateReport } from "../hooks/useGenerateReport";
 import { useDeleteReport } from "../hooks/useDeleteReport";
@@ -8,6 +9,7 @@ import GenerateReportForm from "../components/GenerateReportForm";
 import ReportCard from "../components/ReportCard";
 import Loading from "../../../components/common/Loading";
 import ErrorState from "../../../components/common/ErrorState";
+import EmptyState from "../../../components/ui/EmptyState";
 
 export default function ReportsPage() {
   const { farm } = useOutletContext();
@@ -51,7 +53,7 @@ export default function ReportsPage() {
       <GenerateReportForm onGenerate={handleGenerate} isPending={generate.isPending} />
 
       <div>
-        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-neutral-500">
+        <h2 className="mb-3 text-xs font-bold uppercase tracking-wider text-neutral-400">
           Report history
         </h2>
 
@@ -63,12 +65,11 @@ export default function ReportsPage() {
             onRetry={() => reportsQuery.refetch()}
           />
         ) : !reportsQuery.data?.length ? (
-          <div className="rounded-xl border border-dashed border-neutral-300 bg-white px-6 py-12 text-center">
-            <p className="text-sm text-neutral-500">
-              No reports yet. Generate one above to get a downloadable PDF, CSV, or JSON summary
-              of this farm.
-            </p>
-          </div>
+          <EmptyState
+            icon={FileText}
+            title="No reports yet"
+            description="Generate one above to get a downloadable PDF, CSV, or JSON summary of this farm."
+          />
         ) : (
           <div className="space-y-3">
             {reportsQuery.data.map((report) => (

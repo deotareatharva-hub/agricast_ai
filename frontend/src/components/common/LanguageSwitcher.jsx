@@ -12,7 +12,7 @@ export default function LanguageSwitcher({ className = "" }) {
       <select
         value={i18n.resolvedLanguage}
         onChange={(e) => i18n.changeLanguage(e.target.value)}
-        className="focus-ring cursor-pointer rounded-md border border-neutral-300 bg-white px-2 py-1 text-sm text-neutral-700"
+        className="focus-ring cursor-pointer rounded-xl border border-transparent bg-neutral-900/[0.04] px-2.5 py-1.5 text-sm text-neutral-600 transition hover:bg-neutral-900/[0.07]"
         aria-label={t("common.language")}
       >
         {SUPPORTED_LANGUAGES.map((lang) => (
